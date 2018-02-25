@@ -3,7 +3,6 @@
 *.dll
 *.so
 *.dylib
-bin/
 
 # Test binary, build with `go test -c`
 *.test
@@ -14,4 +13,5 @@ bin/
 # Project-local glide cache, RE: https://github.com/Masterminds/glide/issues/736
 .glide/
 
-.idea/
+.idea/workspace.xml
+.idea/vcs.xml
