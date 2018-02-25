@@ -1,0 +1,28 @@
+#!/bin/sh
+IGNORE=''''
+exec "$(dirname "$0")"/../bin/hl2 $debug $options -n --width 120 -r "$0"
+'''
+
+[[rule]]
+pattern = '''show'''
+show = true
+
+[[rule]]
+pattern = '''a1'''
+show = true
+after = 1
+
+[[rule]]
+pattern = '''a2'''
+show = true
+after = 2
+
+[[rule]]
+pattern = '''b1'''
+show = true
+before = 1
+
+[[rule]]
+pattern = '''b2'''
+show = true
+before = 2

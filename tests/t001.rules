@@ -1,0 +1,89 @@
+#!/bin/sh
+IGNORE=''''
+exec "$(dirname "$0")"/../bin/hl2 $debug $options --width 120 -r "$0"
+'''
+
+[[rule]]
+pattern = '''STOP'''
+stop = true
+
+[[rule]]
+pattern = '''bold'''
+color = 'bred'
+stop = true
+
+[[rule]]
+pattern = '''italic'''
+color = 'ired'
+stop = true
+
+[[rule]]
+pattern = '''underline'''
+color = 'ured'
+stop = true
+
+[[rule]]
+pattern = '''strike'''
+color = 'sred'
+stop = true
+
+[[rule]]
+pattern = '''faint'''
+color = 'fred'
+stop = true
+
+[[rule]]
+pattern = '''all'''
+color = 'bfiusfred'
+stop = true
+
+[[rule]]
+pattern = '''[abc]+'''
+color = 'red'
+line_color = '/green'
+
+[[rule]]
+pattern = '''X'''
+line_color = '/220'
+
+[[rule]]
+pattern = '''Y'''
+color = '100'
+
+[[rule]]
+pattern = '''post'''
+post_line = '+'
+post_line_color = 'blue'
+
+[[rule]]
+pattern = '''pre'''
+pre_line = '@#'
+pre_line_color = '/blue'
+
+[[rule]]
+pattern = '''[③-⑥]+'''
+color = 'bred'
+
+[[rule]]
+pattern = '''0(1+)0'''
+color = 'blue'
+
+[[rule]]
+pattern = '''{#} (?i) \d+ ([a-z]+) \d+'''
+when = '''ZZZ'''
+color = 'red'
+
+[[rule]]
+pattern = '''123'''
+when = '''{!}ZZZ'''
+color = 'red'
+
+[[rule]]
+pattern = '''back'''
+line_color = '500'
+
+[[rule]]
+pattern = '''back'''
+line_color = '/005'
+
+

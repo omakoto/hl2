@@ -1,0 +1,49 @@
+#!/bin/bash
+
+here=$(dirname "$0")
+
+filter="$*"
+: ${filter:='*'}
+
+if [[ "$WITH_DEBUGGER" == 1 ]] ; then
+    debug=--debug
+fi
+
+export options="--no-pcre"
+export debug
+
+bin=../bin/hl2
+
+die() {
+  echo "$@"
+  exit 2
+}
+
+unset COLORTERM
+
+cd $here || die "$0: can't chdir to $here."
+
+../scripts/build.sh
+
+for r in t*.rules ; do
+  name=$(basename $r .rules)
+
+  for input in ${name}_*.input; do
+    if [[ "$input" != $filter ]] ; then
+        continue
+    fi
+    echo -n "Test: $input "
+    base="$(basename "$input" .input)"
+    expect="${base}.expect"
+    actual="${base}.actual"
+    diff="${base}.diff"
+    bash $r <"$input" >"$actual"
+    diff --color=never -u "$expect" "$actual" >"$diff"
+    rc=$?
+    if (( $rc == 0 )) ; then
+      echo "pass"
+    else
+      echo "fail"
+    fi
+  done
+done

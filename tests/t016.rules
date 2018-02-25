@@ -1,0 +1,4 @@
+#!/bin/sh
+IGNORE=''''
+exec "$(dirname "$0")"/../bin/hl2 $debug $options -n --width 120 -2c bash -c 'echo ok 1>&2' , 'ok'
+'''

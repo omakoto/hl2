@@ -1,0 +1,5 @@
+---
+10  0A  00001010    LF  line feed                       show
+11  0B  00001011    VT  vertical tab
+12  0C  00001100    FF  form feed                       b2
+---

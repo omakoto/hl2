@@ -1,0 +1,8 @@
+@black@ @red@ @green@ @yellow@ @blue@ @magenta@ @cyan@ @white@ @r@ @g@ @b@
+@bblack@ @bred@ @bgreen@ @byellow@ @bblue@ @bmagenta@ @bcyan@ @bwhite@ @br@ @bg@ @bb@
+%black% %red% %green% %yellow% %blue% %magenta% %cyan% %white% %r% %g% %b%
+%bblack% %bred% %bgreen% %byellow% %bblue% %bmagenta% %bcyan% %bwhite% %br% %bg% %bb%
+! @black@ @red@ @green@ @yellow@ @blue@ @magenta@ @cyan@ @white@ @r@ @g@ @b@
+! @bblack@ @bred@ @bgreen@ @byellow@ @bblue@ @bmagenta@ @bcyan@ @bwhite@ @br@ @bg@ @bb@
+! %black% %red% %green% %yellow% %blue% %magenta% %cyan% %white% %r% %g% %b%
+! %bblack% %bred% %bgreen% %byellow% %bblue% %bmagenta% %bcyan% %bwhite% %br% %bg% %bb%

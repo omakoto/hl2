@@ -1,0 +1,9 @@
+#!/bin/sh
+IGNORE=''''
+exec "$(dirname "$0")"/../bin/hl2 $debug $options --width 120 -ir "$0"
+'''
+
+[[rule]]
+pattern = '''all'''
+color = 'bfiusfred'
+stop = true

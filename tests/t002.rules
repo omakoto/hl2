@@ -1,0 +1,193 @@
+#!/bin/sh
+IGNORE=''''
+exec "$(dirname "$0")"/../bin/hl2 $debug $options --width 120 -r "$0"
+'''
+
+# Fore colors ==============================================
+
+[[rule]]
+pattern = '''@black@'''
+color = 'black'
+
+[[rule]]
+pattern = '''@red@'''
+color = 'red'
+
+[[rule]]
+pattern = '''@green@'''
+color = 'green'
+
+[[rule]]
+pattern = '''@yellow@'''
+color = 'yellow'
+
+[[rule]]
+pattern = '''@blue@'''
+color = 'blue'
+
+[[rule]]
+pattern = '''@magenta@'''
+color = 'magenta'
+
+[[rule]]
+pattern = '''@cyan@'''
+color = 'cyan'
+
+[[rule]]
+pattern = '''@white@'''
+color = 'white'
+
+[[rule]]
+pattern = '''@r@'''
+color = '500'
+
+[[rule]]
+pattern = '''@g@'''
+color = '050'
+
+[[rule]]
+pattern = '''@b@'''
+color = '005'
+
+# Fore colors + bold ==============================================
+
+[[rule]]
+pattern = '''@bblack@'''
+color = 'bblack'
+
+[[rule]]
+pattern = '''@bred@'''
+color = 'bred'
+
+[[rule]]
+pattern = '''@bgreen@'''
+color = 'bgreen'
+
+[[rule]]
+pattern = '''@byellow@'''
+color = 'byellow'
+
+[[rule]]
+pattern = '''@bblue@'''
+color = 'bblue'
+
+[[rule]]
+pattern = '''@bmagenta@'''
+color = 'bmagenta'
+
+[[rule]]
+pattern = '''@bcyan@'''
+color = 'bcyan'
+
+[[rule]]
+pattern = '''@bwhite@'''
+color = 'bwhite'
+
+[[rule]]
+pattern = '''@br@'''
+color = 'b500'
+
+[[rule]]
+pattern = '''@bg@'''
+color = 'b050'
+
+[[rule]]
+pattern = '''@bb@'''
+color = 'b005'
+
+# Back colors ==============================================
+
+[[rule]]
+pattern = '''%black%'''
+color = '/black'
+
+[[rule]]
+pattern = '''%red%'''
+color = '/red'
+
+[[rule]]
+pattern = '''%green%'''
+color = '/green'
+
+[[rule]]
+pattern = '''%yellow%'''
+color = '/yellow'
+
+[[rule]]
+pattern = '''%blue%'''
+color = '/blue'
+
+[[rule]]
+pattern = '''%magenta%'''
+color = '/magenta'
+
+[[rule]]
+pattern = '''%cyan%'''
+color = '/cyan'
+
+[[rule]]
+pattern = '''%white%'''
+color = '/white'
+
+[[rule]]
+pattern = '''%r%'''
+color = '/500'
+
+[[rule]]
+pattern = '''%g%'''
+color = '/050'
+
+[[rule]]
+pattern = '''%b%'''
+color = '/005'
+
+# Back colors + bold ==============================================
+# (Note this never worked, so these tests are sort of moot.)
+
+[[rule]]
+pattern = '''%bblack%'''
+color = '/black'
+
+[[rule]]
+pattern = '''%bred%'''
+color = '/red'
+
+[[rule]]
+pattern = '''%bgreen%'''
+color = '/green'
+
+[[rule]]
+pattern = '''%byellow%'''
+color = '/yellow'
+
+[[rule]]
+pattern = '''%bblue%'''
+color = '/blue'
+
+[[rule]]
+pattern = '''%bmagenta%'''
+color = '/magenta'
+
+[[rule]]
+pattern = '''%bcyan%'''
+color = '/cyan'
+
+[[rule]]
+pattern = '''%bwhite%'''
+color = '/white'
+
+[[rule]]
+pattern = '''%br%'''
+color = '/500'
+
+[[rule]]
+pattern = '''%bg%'''
+color = '/050'
+
+[[rule]]
+pattern = '''%bb%'''
+color = '/005'
+
+[[rule]]
+pattern = '''^\!'''
+line_color = '/white'

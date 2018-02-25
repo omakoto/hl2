@@ -1,0 +1,65 @@
+[0m[48;5;196m0[0m   00  00000000    NUL null
+[0m[48;5;196m1[0m   01  00000001    SOH start of header
+[0m[48;5;196m2[0m   02  00000010    STX start of text
+[0m[48;5;196m3[0m   03  00000011    ETX end of text
+[0m[48;5;196m4[0m   04  00000100    EOT end of transmission
+[0m[48;5;196m5[0m   05  00000101    ENQ enquiry
+[0m[48;5;196m6[0m   06  00000110    ACK acknowledge
+[0m[48;5;196m7[0m   07  00000111    BEL bell
+[0m[48;5;196m8[0m   08  00001000    BS  backspace
+[0m[48;5;196m9[0m   09  00001001    HT  horizontal tab
+---
+[0m[48;5;196m11[0m  0B  00001011    VT  vertical tab
+[0m[48;5;196m12[0m  0C  00001100    FF  form feed
+[0m[48;5;196m13[0m  0D  00001101    CR  enter / carriage return
+[0m[48;5;196m14[0m  0E  00001110    SO  shift out
+[0m[48;5;196m15[0m  0F  00001111    SI  shift in
+[0m[48;5;196m16[0m  10  00010000    DLE data link escape
+[0m[48;5;196m17[0m  11  00010001    DC1 device control 1
+[0m[48;5;196m18[0m  12  00010010    DC2 device control 2
+[0m[48;5;196m19[0m  13  00010011    DC3 device control 3
+[0m[48;5;196m20[0m  14  00010100    DC4 device control 4
+[0m[48;5;196m21[0m  15  00010101    NAK negative acknowledge
+[0m[48;5;196m22[0m  16  00010110    SYN synchronize
+[0m[48;5;196m23[0m  17  00010111    ETB end of trans. block
+[0m[48;5;196m24[0m  18  00011000    CAN cancel
+[0m[48;5;196m25[0m  19  00011001    EM  end of medium
+[0m[48;5;196m26[0m  1A  00011010    SUB substitute
+[0m[48;5;196m27[0m  1B  00011011    ESC escape
+[0m[48;5;196m28[0m  1C  00011100    FS file separator
+[0m[48;5;196m29[0m  1D  00011101    GS  group separator
+[0m[48;5;196m30[0m  1E  00011110    RS  record separator
+[0m[48;5;196m31[0m  1F  00011111    US  unit separator
+[0m[48;5;196m32[0m  20  00100000    Space   space
+---
+[0m[48;5;196m40[0m  28  00101000    (   left parenthesis
+[0m[48;5;196m41[0m  29  00101001    )   right parenthesis
+---
+[0m[48;5;196m48[0m  30  00110000    0   zero
+[0m[48;5;196m49[0m  31  00110001    1   one
+[0m[48;5;196m50[0m  32  00110010    2   two
+[0m[48;5;196m51[0m  33  00110011    3   three
+[0m[48;5;196m52[0m  34  00110100    4   four
+[0m[48;5;196m53[0m  35  00110101    5   five
+---
+[0m[48;5;196m67[0m  43  01000011    C
+[0m[48;5;196m68[0m  44  01000100    D
+[0m[48;5;196m69[0m  45  01000101    E
+[0m[48;5;196m70[0m  46  01000110    F
+[0m[48;5;196m71[0m  47  01000111    G
+[0m[48;5;196m72[0m  48  01001000    H
+---
+[0m[48;5;196m86[0m  56  01010110    V
+[0m[48;5;196m87[0m  57  01010111    W
+[0m[48;5;196m91[0m  5B  01011011    [   left square bracket
+[0m[48;5;196m92[0m  5C  01011100    \   backslash
+[0m[48;5;196m93[0m  5D  01011101    ]   right square bracket
+[0m[48;5;196m94[0m  5E  01011110    ^   caret / circumflex
+---
+[0m[48;5;196m118[0m 76  01110110    v
+[0m[48;5;196m119[0m 77  01110111    w
+[0m[48;5;196m123[0m 7B  01111011    {   left curly bracket
+[0m[48;5;196m124[0m 7C  01111100    |   vertical bar
+[0m[48;5;196m125[0m 7D  01111101    }   right curly bracket
+[0m[48;5;196m126[0m 7E  01111110    ~   tilde
+[0m[48;5;196m127[0m 7F  01111111    DEL delete

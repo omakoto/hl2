@@ -1,0 +1,52 @@
+#!/bin/sh
+IGNORE=''''
+exec "$(dirname "$0")"/../bin/hl2 $debug $options --width 120 -r "$0"
+'''
+
+[[rule]]
+pattern = '''^\d+'''
+color = '/ff0000'
+
+[[rule]]
+pattern = '''^10\s'''
+hide = true
+
+[[rule]]
+pattern = '''^127\s'''
+states = ['printable']
+next_state = 'INIT'
+
+[[rule]]
+states = ['printable']
+hide = true
+
+[[rule]]
+pattern = '''^32\s'''
+next_state = 'printable'
+
+[[rule]]
+pattern = '''parenthesis'''
+show = true
+
+[[rule]]
+pattern = '''bracket'''
+show = true
+before = 2
+after = 1
+
+[[rule]]
+pattern = '''\bzero\b'''
+show = true
+after = 9
+
+[[rule]]
+pattern = '''\bH\b'''
+show = true
+before = 5
+
+
+[[rule]]
+pattern = '''\bfour\b'''
+show = true
+before = 1
+after = 1

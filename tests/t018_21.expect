@@ -1,0 +1,6 @@
+---
+7   07  00000111    BEL bell                            a1
+8   08  00001000    BS  backspace
+---
+10  0A  00001010    LF  line feed                       show
+---

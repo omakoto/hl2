@@ -1,0 +1,3 @@
+- Test bit color / index color too.
+
+- Fail with unknown TOML fields.
