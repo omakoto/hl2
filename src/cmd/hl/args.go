@@ -16,10 +16,10 @@ var (
 	}
 )
 
-func parseArgs(h *highlighter.Highlighter, args []string, takeInput bool, commandTerminator, rangeSeparator string) (inputArgs []string, err error) {
+func parseArgs(h *highlighter.Highlighter, args []string, takeInput bool, argumentSeparator string) (inputArgs []string, err error) {
 	pos := 0
 	if takeInput {
-		inputArgs = extractInputArgs(args, &pos, commandTerminator)
+		inputArgs = extractInputArgs(args, &pos, argumentSeparator)
 	}
 	peek := func(nth int) string {
 		next := pos + nth
@@ -52,7 +52,7 @@ func parseArgs(h *highlighter.Highlighter, args []string, takeInput bool, comman
 	for pos < len(args) {
 		pattern, colors := nextPatternAndColors()
 
-		if peek(0) != rangeSeparator {
+		if peek(0) != argumentSeparator {
 			h.AddSimpleRule(simpleparser.NewSimple(pattern, colors))
 		} else {
 			pos++
@@ -64,12 +64,12 @@ func parseArgs(h *highlighter.Highlighter, args []string, takeInput bool, comman
 	return
 }
 
-func extractInputArgs(args []string, pos *int, commandTerminator string) []string {
+func extractInputArgs(args []string, pos *int, argumentSeparator string) []string {
 	commandLine := make([]string, 0)
 	for *pos < len(args) {
 		a := args[*pos]
 		*pos++
-		if a == commandTerminator {
+		if a == argumentSeparator {
 			break
 		}
 		commandLine = append(commandLine, a)

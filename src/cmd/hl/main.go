@@ -16,37 +16,30 @@ import (
 
 const (
 	Name              = "hl"
-	CommandTerminator = ","
-	RangeSeparator    = "-"
+	ArgumentSeparator = ","
 )
 
 var (
 	ruleFile = getopt.StringLong("rule", 'r', "", "Specify TOML rule file.")
 
-	after          = getopt.IntLong("after", 'A', 0, "Specify number of 'after' context lines.")
-	before         = getopt.IntLong("before", 'B', 0, "Specify number of 'before' context lines.")
-	context        = getopt.IntLong("context", 'C', 0, "Specify number of context lines.")
-	ignoreCase     = getopt.BoolLong("ignore-case", 'i', "Perform case insensitive match.")
-	defaultHide    = getopt.BoolLong("hide", 'n', "Hide all lines by default.")
-	execute        = getopt.StringLong("command", 'c', CommandTerminator, "Execute a command and apply to output.\nOptionally specify command line terminator. (default="+CommandTerminator+")")
-	eatStderr      = getopt.BoolLong("stderr", '2', "Use with -c; process stderr from command too.")
-	width          = getopt.IntLong("width", 'w', term.GetTermWidth(), "Set terminal width, used for pre and post lines.")
-	cpuprofile     = getopt.StringLong("cpuprofile", 'P', "", "Write cpu profile to file.")
-	help           = getopt.BoolLong("help", 'h', "Show this help.")
-	noTtyWarning   = getopt.BoolLong("no-tty-warning", 'q', "Don't show warning even when stdin is tty.")
-	readFiles      = getopt.StringLong("files", 'f', "", "Similar to -c but specify input files.")
-	rangeSeparator = getopt.StringLong("range-separator", 's', RangeSeparator, "Specify range separator. (default="+RangeSeparator+")")
-
-	executeOption   = getopt.Lookup('c')
-	readFilesOption = getopt.Lookup('f')
+	after             = getopt.IntLong("after", 'A', 0, "Specify number of 'after' context lines.")
+	before            = getopt.IntLong("before", 'B', 0, "Specify number of 'before' context lines.")
+	context           = getopt.IntLong("context", 'C', 0, "Specify number of context lines.")
+	ignoreCase        = getopt.BoolLong("ignore-case", 'i', "Perform case insensitive match.")
+	defaultHide       = getopt.BoolLong("hide", 'n', "Hide all lines by default.")
+	execute           = getopt.BoolLong("command", 'c', "TODO Doc") // "Treat arguments as command line instead of input filese, execute it and apply to output.\nOptionally specify command line terminator.")
+	eatStderr         = getopt.BoolLong("stderr", '2', "Use with -c; process stderr from command too.")
+	width             = getopt.IntLong("width", 'w', term.GetTermWidth(), "Set terminal width, used for pre and post lines.")
+	cpuprofile        = getopt.StringLong("cpuprofile", 'P', "", "Write cpu profile to file.")
+	help              = getopt.BoolLong("help", 'h', "Show this help.")
+	noTtyWarning      = getopt.BoolLong("no-tty-warning", 'q', "Don't show warning even when stdin is tty.")
+	readFiles         = getopt.BoolLong("files", 'f', "TODO Doc")
+	argumentSeparator = getopt.StringLong("range-separator", 's', ArgumentSeparator, "Specify argument separator. (default="+ArgumentSeparator+")")
 )
 
 func init() {
 	getopt.FlagLong(&util.Debug, "debug", 'd', "Enable debug output.")
 	getopt.FlagLong(&matcher.NoPcre, "no-pcre", 'N', "Disable PCRE and use Go's regexp engine instead.")
-
-	executeOption.SetOptional()
-	readFilesOption.SetOptional()
 
 	getopt.SetUsage(usage)
 }
@@ -56,12 +49,12 @@ func usage() {
 hl: Versatile coloring filter
 
 Usage:
-  hl -r RULE_TOML [OPTIONS]    (Read rules from RULE_TOML)
-  hl [OPTIONS] COLOR-SPEC...   (Give color spec from command line)
-  hl -c    [OPTIONS] COMMAND [ARGS...] [, FILTER-SPEC...]   (Apply to command output; -r can be used too)
-  hl -cSEP [OPTIONS] COMMAND [ARGS...] [SEP FILTER-SPEC...] (Same as above but use arbitrary separator)
-  hl -f    [OPTIONS] FILES... [, FILTER-SPEC...]   (Apply to FILES; -r can be used too)
-  hl -fSEP [OPTIONS] FILES... [SEP FILTER-SPEC...] (Same as above but use arbitrary separator)
+  TODO FIX hl -r RULE_TOML [OPTIONS]    (Read rules from RULE_TOML)
+  TODO FIX hl [OPTIONS] COLOR-SPEC...   (Give color spec from command line)
+  TODO FIX hl -c    [OPTIONS] COMMAND [ARGS...] [, FILTER-SPEC...]   (Apply to command output; -r can be used too)
+  TODO FIX hl -cSEP [OPTIONS] COMMAND [ARGS...] [SEP FILTER-SPEC...] (Same as above but use arbitrary separator)
+  TODO FIX hl -f    [OPTIONS] FILES... [, FILTER-SPEC...]   (Apply to FILES; -r can be used too)
+  TODO FIX hl -fSEP [OPTIONS] FILES... [SEP FILTER-SPEC...] (Same as above but use arbitrary separator)
 
   FILTER-SPEC is a list of:
     PATTERN [ COLOR-SPEC ]
@@ -88,16 +81,6 @@ Options:
 	os.Stderr.WriteString("\n")
 }
 
-func getCommandTerminator() string {
-	if !executeOption.Seen() {
-		return ""
-	}
-	if len(*execute) > 0 {
-		return *execute
-	}
-	return CommandTerminator
-}
-
 func preprocessOptions() {
 	if *help {
 		getopt.Usage()
@@ -112,7 +95,7 @@ func preprocessOptions() {
 		*before = *context
 	}
 
-	if executeOption.Seen() && readFilesOption.Seen() {
+	if *execute && *readFiles {
 		Fatalf("Cannot use -c and -f at the same time.\n")
 	}
 }
@@ -127,20 +110,8 @@ func main() {
 	util.Dump("Highlighter (start): ", h)
 
 	// Process -c and -f, and also extract simple (inline) rules.
-	doExecute := executeOption.Seen()
-	doReadFiles := readFilesOption.Seen()
 
-	term := ""
-	if doExecute {
-		term = *execute
-	} else if doReadFiles {
-		term = *readFiles
-	}
-	if term == "" {
-		term = CommandTerminator
-	}
-
-	inputArgs, err := parseArgs(h, getopt.Args(), doExecute || doReadFiles, term, *rangeSeparator)
+	inputArgs, err := parseArgs(h, getopt.Args(), *execute || *readFiles, *argumentSeparator)
 	if err != nil {
 		Fatalf("Invalid options: %s", err)
 	}
@@ -161,7 +132,7 @@ func main() {
 	}
 
 	// Main.
-	if doReadFiles {
+	if *readFiles {
 		for _, f := range inputArgs {
 			in, err := os.Open(f)
 			if err != nil {
@@ -173,7 +144,7 @@ func main() {
 		// Execute the command if one is passed.
 		var in io.ReadCloser = os.Stdin
 
-		if doExecute {
+		if *execute {
 			var cleaner func()
 			in, cleaner = startCommand(inputArgs)
 			defer cleaner()
