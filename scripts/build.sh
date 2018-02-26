@@ -7,9 +7,9 @@ cd "${0%/*}/.."
 out=bin
 mkdir -p "$out"
 
-go build -o "$out/hl2" ./src/cmd/hl2
+go build -o "$out/hl" ./src/cmd/hl
 
 if [[ "$1" == "-r" ]] ; then
     shift
-    "$out/hl2" "$@"
+    "$out/hl" "$@"
 fi

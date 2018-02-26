@@ -12,7 +12,7 @@ fi
 export options="--no-pcre"
 export debug
 
-bin=../bin/hl2
+bin=../bin/hl
 
 die() {
   echo "$@"

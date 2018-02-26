@@ -1,6 +1,6 @@
 #!/bin/sh
 IGNORE=''''
-exec hl2 -r "$0" "${@}"
+exec hl -r "$0" "${@}"
 '''
 
 # [[rule]]

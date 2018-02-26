@@ -1,5 +1,5 @@
 #!/bin/sh
 IGNORE=''''
-echo ok | "$(dirname "$0")"/../bin/hl2 $debug $options -n --width 120 -c cat , 'ok'
+echo ok | "$(dirname "$0")"/../bin/hl $debug $options -n --width 120 -c cat , 'ok'
 exit $?
 '''

@@ -1,4 +1,4 @@
 #!/bin/sh
 IGNORE=''''
-exec "$(dirname "$0")"/../bin/hl2 $debug $options -n --width 120 -c bash -c 'echo ok' , 'ok'
+exec "$(dirname "$0")"/../bin/hl $debug $options -n --width 120 -c bash -c 'echo ok' , 'ok'
 '''

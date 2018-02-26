@@ -4,4 +4,4 @@ set -e
 
 cd "${0%/*}/.."
 
-go install ./src/cmd/hl2
+go install ./src/cmd/hl

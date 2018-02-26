@@ -53,15 +53,15 @@ func init() {
 
 func usage() {
 	os.Stderr.WriteString(`
-hl2: Versatile coloring filter
+hl: Versatile coloring filter
 
 Usage:
-  hl2 -r RULE_TOML [OPTIONS]    (Read rules from RULE_TOML)
-  hl2 [OPTIONS] COLOR-SPEC...   (Give color spec from command line)
-  hl2 -c    [OPTIONS] COMMAND [ARGS...] [, FILTER-SPEC...]   (Apply to command output; -r can be used too)
-  hl2 -cSEP [OPTIONS] COMMAND [ARGS...] [SEP FILTER-SPEC...] (Same as above but use arbitrary separator)
-  hl2 -f    [OPTIONS] FILES... [, FILTER-SPEC...]   (Apply to FILES; -r can be used too)
-  hl2 -fSEP [OPTIONS] FILES... [SEP FILTER-SPEC...] (Same as above but use arbitrary separator)
+  hl -r RULE_TOML [OPTIONS]    (Read rules from RULE_TOML)
+  hl [OPTIONS] COLOR-SPEC...   (Give color spec from command line)
+  hl -c    [OPTIONS] COMMAND [ARGS...] [, FILTER-SPEC...]   (Apply to command output; -r can be used too)
+  hl -cSEP [OPTIONS] COMMAND [ARGS...] [SEP FILTER-SPEC...] (Same as above but use arbitrary separator)
+  hl -f    [OPTIONS] FILES... [, FILTER-SPEC...]   (Apply to FILES; -r can be used too)
+  hl -fSEP [OPTIONS] FILES... [SEP FILTER-SPEC...] (Same as above but use arbitrary separator)
 
   FILTER-SPEC is a list of:
     PATTERN [ COLOR-SPEC ]

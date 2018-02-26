@@ -1,4 +1,4 @@
 #!/bin/sh
 IGNORE=''''
-exec "$(dirname "$0")"/../bin/hl2 $debug $options --width 120 -s == -C 3 '^10 ' '@red/green' == '' '^30 ' '@303/050@/010' '^40 ' '@@/003' == '' '^120' ==
+exec "$(dirname "$0")"/../bin/hl $debug $options --width 120 -s == -C 3 '^10 ' '@red/green' == '' '^30 ' '@303/050@/010' '^40 ' '@@/003' == '' '^120' ==
 '''
