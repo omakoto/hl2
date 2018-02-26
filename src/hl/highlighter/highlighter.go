@@ -50,6 +50,10 @@ func (h *Highlighter) DefaultHide() bool {
 	return h.defaultHide
 }
 
+func (h *Highlighter) SetDefaultHide(defaultHide bool) {
+	h.defaultHide = defaultHide
+}
+
 func (h *Highlighter) DefaultAfter() int {
 	return h.defaultAfter
 }

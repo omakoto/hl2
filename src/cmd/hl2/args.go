@@ -16,7 +16,7 @@ var (
 	}
 )
 
-func parseArgs(h *highlighter.Highlighter, args []string, execute bool, commandTerminator string) error {
+func parseArgs(h *highlighter.Highlighter, args []string, execute bool, commandTerminator, rangeSeparator string) error {
 	pos := 0
 	if execute {
 		extractCommandLine(h, args, &pos, commandTerminator)
@@ -52,12 +52,13 @@ func parseArgs(h *highlighter.Highlighter, args []string, execute bool, commandT
 	for pos < len(args) {
 		pattern, colors := nextPatternAndColors()
 
-		if peek(0) != "," {
+		if peek(0) != rangeSeparator {
 			h.AddSimpleRule(simpleparser.NewSimple(pattern, colors))
 		} else {
 			pos++
 			pattern2, colors2 := nextPatternAndColors()
 			h.AddSimpleRangeRules(simpleparser.NewSimple(pattern, colors), simpleparser.NewSimple(pattern2, colors2))
+			h.SetDefaultHide(true) // Range patterns imply -n.
 		}
 	}
 	return nil

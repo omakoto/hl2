@@ -23,6 +23,9 @@ unset COLORTERM
 
 cd $here || die "$0: can't chdir to $here."
 
+num_pass=0
+num_fail=0
+
 ../scripts/build.sh
 
 for r in t*.rules ; do
@@ -42,8 +45,16 @@ for r in t*.rules ; do
     rc=$?
     if (( $rc == 0 )) ; then
       echo "pass"
+      num_pass=$(( $num_pass + 1 ))
     else
-      echo "fail"
+      echo "FAIL"
+      num_fail=$(( $num_fail + 1 ))
     fi
   done
 done
+
+if (( $num_pass > 0 && $num_fail == 0 )) ; then
+    exit 0
+else
+    exit 1
+fi

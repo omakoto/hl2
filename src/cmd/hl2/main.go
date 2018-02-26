@@ -17,23 +17,25 @@ import (
 const (
 	Name              = "hl"
 	CommandTerminator = ","
+	RangeSeparator    = "-"
 )
 
 var (
 	ruleFile = getopt.StringLong("rule", 'r', "", "Specify TOML rule file.")
 
-	after        = getopt.IntLong("after", 'A', 0, "Specify number of 'after' context lines.")
-	before       = getopt.IntLong("before", 'B', 0, "Specify number of 'before' context lines.")
-	context      = getopt.IntLong("context", 'C', 0, "Specify number of context lines.")
-	ignoreCase   = getopt.BoolLong("ignore-case", 'i', "Perform case insensitive match.")
-	defaultHide  = getopt.BoolLong("hide", 'n', "Hide all lines by default.")
-	execute      = getopt.StringLong("command", 'c', CommandTerminator, "Execute a command and apply to output.\nOptionally specify command line terminator (default=,).")
-	eatStderr    = getopt.BoolLong("stderr", '2', "Use with -c; process stderr from command too.")
-	width        = getopt.IntLong("width", 'w', term.GetTermWidth(), "Set terminal width, used for pre and post lines.")
-	cpuprofile   = getopt.StringLong("cpuprofile", 'P', "", "Write cpu profile to file.")
-	help         = getopt.BoolLong("help", 'h', "Show this help.")
-	noTtyWarning = getopt.BoolLong("no-tty-warning", 'q', "Don't show warning even when stdin is tty")
-	inFile       = getopt.StringLong("input", 'f', "", "Read input from specified file instead of stdins.")
+	after          = getopt.IntLong("after", 'A', 0, "Specify number of 'after' context lines.")
+	before         = getopt.IntLong("before", 'B', 0, "Specify number of 'before' context lines.")
+	context        = getopt.IntLong("context", 'C', 0, "Specify number of context lines.")
+	ignoreCase     = getopt.BoolLong("ignore-case", 'i', "Perform case insensitive match.")
+	defaultHide    = getopt.BoolLong("hide", 'n', "Hide all lines by default.")
+	execute        = getopt.StringLong("command", 'c', CommandTerminator, "Execute a command and apply to output.\nOptionally specify command line terminator. (default="+CommandTerminator+")")
+	eatStderr      = getopt.BoolLong("stderr", '2', "Use with -c; process stderr from command too.")
+	width          = getopt.IntLong("width", 'w', term.GetTermWidth(), "Set terminal width, used for pre and post lines.")
+	cpuprofile     = getopt.StringLong("cpuprofile", 'P', "", "Write cpu profile to file.")
+	help           = getopt.BoolLong("help", 'h', "Show this help.")
+	noTtyWarning   = getopt.BoolLong("no-tty-warning", 'q', "Don't show warning even when stdin is tty")
+	inFile         = getopt.StringLong("input", 'f', "", "Read input from specified file instead of stdins.")
+	rangeSeparator = getopt.StringLong("range-separator", 's', RangeSeparator, "Specify range separator. (default="+RangeSeparator+")")
 
 	executeOption = getopt.Lookup('c')
 )
@@ -80,7 +82,7 @@ func main() {
 			Fatalf("Unable to read rule file: %s", err)
 		}
 	}
-	err := parseArgs(h, getopt.Args(), executeOption.Seen(), getCommandTerminator())
+	err := parseArgs(h, getopt.Args(), executeOption.Seen(), getCommandTerminator(), *rangeSeparator)
 	if err != nil {
 		Fatalf("Invalid options: %s", err)
 	}
