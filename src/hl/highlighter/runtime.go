@@ -44,8 +44,13 @@ func (c *ColorsCache) prepare(lineByteCount int) {
 func (c *ColorsCache) applyColors(start, end int, colors *term.RenderedColors) {
 	for i := start; i < end; i++ {
 		prev := c.cache[i]
-		c.cache[i] = colors
-		c.cache[i].SetNext(prev)
+		if prev == nil {
+			c.cache[i] = colors
+		} else {
+			clone := *colors
+			c.cache[i] = &clone
+			c.cache[i].SetNext(prev)
+		}
 	}
 }
 
