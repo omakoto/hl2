@@ -98,12 +98,10 @@ func getCommandTerminator() string {
 	return CommandTerminator
 }
 
-func main() {
-	getopt.Parse()
-
+func preprocessOptions() {
 	if *help {
 		getopt.Usage()
-		return
+		os.Exit(0)
 	}
 
 	if *width > 0 {
@@ -114,6 +112,16 @@ func main() {
 		*before = *context
 	}
 
+	if executeOption.Seen() && readFilesOption.Seen() {
+		Fatalf("Cannot use -c and -f at the same time.\n")
+	}
+}
+
+func main() {
+	getopt.Parse()
+
+	preprocessOptions()
+
 	// Initialize highlighter.
 	h := highlighter.NewHighlighter(term.NewTerm(), *ignoreCase, *defaultHide, *before, *after)
 	util.Dump("Highlighter (start): ", h)
@@ -121,9 +129,7 @@ func main() {
 	// Process -c and -f, and also extract simple (inline) rules.
 	doExecute := executeOption.Seen()
 	doReadFiles := readFilesOption.Seen()
-	if doExecute && doReadFiles {
-		Fatalf("Cannot use -c and -f at the same time.\n")
-	}
+
 	term := ""
 	if doExecute {
 		term = *execute
@@ -154,6 +160,7 @@ func main() {
 		defer cleaner()
 	}
 
+	// Main.
 	if doReadFiles {
 		for _, f := range inputArgs {
 			in, err := os.Open(f)
