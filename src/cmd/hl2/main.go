@@ -34,10 +34,11 @@ var (
 	cpuprofile     = getopt.StringLong("cpuprofile", 'P', "", "Write cpu profile to file.")
 	help           = getopt.BoolLong("help", 'h', "Show this help.")
 	noTtyWarning   = getopt.BoolLong("no-tty-warning", 'q', "Don't show warning even when stdin is tty.")
-	inFile         = getopt.StringLong("input", 'f', "", "Read input from specified file instead of stdins.")
+	readFiles      = getopt.StringLong("files", 'f', "", "Similar to -c but specify input files.")
 	rangeSeparator = getopt.StringLong("range-separator", 's', RangeSeparator, "Specify range separator. (default="+RangeSeparator+")")
 
-	executeOption = getopt.Lookup('c')
+	executeOption   = getopt.Lookup('c')
+	readFilesOption = getopt.Lookup('f')
 )
 
 func init() {
@@ -45,6 +46,7 @@ func init() {
 	getopt.FlagLong(&matcher.NoPcre, "no-pcre", 'N', "Disable PCRE and use Go's regexp engine instead.")
 
 	executeOption.SetOptional()
+	readFilesOption.SetOptional()
 
 	getopt.SetUsage(usage)
 }
@@ -58,6 +60,8 @@ Usage:
   hl2 [OPTIONS] COLOR-SPEC...   (Give color spec from command line)
   hl2 -c    [OPTIONS] COMMAND [ARGS...] [, FILTER-SPEC...]   (Apply to command output; -r can be used too)
   hl2 -cSEP [OPTIONS] COMMAND [ARGS...] [SEP FILTER-SPEC...] (Same as above but use arbitrary separator)
+  hl2 -f    [OPTIONS] FILES... [, FILTER-SPEC...]   (Apply to FILES; -r can be used too)
+  hl2 -fSEP [OPTIONS] FILES... [SEP FILTER-SPEC...] (Same as above but use arbitrary separator)
 
   FILTER-SPEC is a list of:
     PATTERN [ COLOR-SPEC ]
@@ -110,18 +114,37 @@ func main() {
 		*before = *context
 	}
 
+	// Initialize highlighter.
 	h := highlighter.NewHighlighter(term.NewTerm(), *ignoreCase, *defaultHide, *before, *after)
 	util.Dump("Highlighter (start): ", h)
 
+	// Process -c and -f, and also extract simple (inline) rules.
+	doExecute := executeOption.Seen()
+	doReadFiles := readFilesOption.Seen()
+	if doExecute && doReadFiles {
+		Fatalf("Cannot use -c and -f at the same time.\n")
+	}
+	term := ""
+	if doExecute {
+		term = *execute
+	} else if doReadFiles {
+		term = *readFiles
+	}
+	if term == "" {
+		term = CommandTerminator
+	}
+
+	inputArgs, err := parseArgs(h, getopt.Args(), doExecute || doReadFiles, term, *rangeSeparator)
+	if err != nil {
+		Fatalf("Invalid options: %s", err)
+	}
+
+	// Load TOML
 	if *ruleFile != "" {
 		err := h.LoadToml(*ruleFile)
 		if err != nil {
 			Fatalf("Unable to read rule file: %s", err)
 		}
-	}
-	err := parseArgs(h, getopt.Args(), executeOption.Seen(), getCommandTerminator(), *rangeSeparator)
-	if err != nil {
-		Fatalf("Invalid options: %s", err)
 	}
 
 	util.Dump("Highlighter (all built up): ", h)
@@ -131,27 +154,28 @@ func main() {
 		defer cleaner()
 	}
 
-	// Execute the command if one is passed.
-	var in io.ReadCloser = os.Stdin
-
-	if len(h.CommandLine()) > 0 {
-		var cleaner func()
-		in, cleaner = startCommand(h.CommandLine())
-		defer cleaner()
-	} else if *inFile != "" {
-		in, err = os.Open(*inFile)
-		if err != nil {
-			Fatalf("Cannot open file %s: %s", *inFile, err)
+	if doReadFiles {
+		for _, f := range inputArgs {
+			in, err := os.Open(f)
+			if err != nil {
+				Fatalf("Cannot open file %s: %s", f, err)
+			}
+			doOnReader(h, in)
 		}
-	}
+	} else {
+		// Execute the command if one is passed.
+		var in io.ReadCloser = os.Stdin
 
-	if !*noTtyWarning && in == os.Stdin && isatty.IsTerminal(os.Stdin.Fd()) {
-		fmt.Fprint(os.Stderr, "Waiting for input from stdin. (Use -q to suppress this message.)\n")
-	}
+		if doExecute {
+			var cleaner func()
+			in, cleaner = startCommand(inputArgs)
+			defer cleaner()
+		}
 
-	err = h.NewRuntime(os.Stdout).ColorReader(in)
-	if err != nil {
-		Fatalf("Unknown failure: %s", err)
+		if !*noTtyWarning && in == os.Stdin && isatty.IsTerminal(os.Stdin.Fd()) {
+			fmt.Fprint(os.Stderr, "Waiting for input from stdin. (Use -q to suppress this message.)\n")
+		}
+		doOnReader(h, in)
 	}
 }
 
@@ -193,5 +217,14 @@ func startCommand(commandLine []string) (io.ReadCloser, func()) {
 	}
 	return in, func() {
 		cmd.Wait()
+	}
+}
+
+func doOnReader(h *highlighter.Highlighter, rd io.ReadCloser) {
+	defer rd.Close()
+
+	err := h.NewRuntime(os.Stdout).ColorReader(rd)
+	if err != nil {
+		Fatalf("Unknown failure: %s", err)
 	}
 }

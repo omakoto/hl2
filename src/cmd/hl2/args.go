@@ -16,10 +16,10 @@ var (
 	}
 )
 
-func parseArgs(h *highlighter.Highlighter, args []string, execute bool, commandTerminator, rangeSeparator string) error {
+func parseArgs(h *highlighter.Highlighter, args []string, takeInput bool, commandTerminator, rangeSeparator string) (inputArgs []string, err error) {
 	pos := 0
-	if execute {
-		extractCommandLine(h, args, &pos, commandTerminator)
+	if takeInput {
+		inputArgs = extractInputArgs(args, &pos, commandTerminator)
 	}
 	peek := func(nth int) string {
 		next := pos + nth
@@ -61,10 +61,10 @@ func parseArgs(h *highlighter.Highlighter, args []string, execute bool, commandT
 			h.SetDefaultHide(true) // Range patterns imply -n.
 		}
 	}
-	return nil
+	return
 }
 
-func extractCommandLine(h *highlighter.Highlighter, args []string, pos *int, commandTerminator string) {
+func extractInputArgs(args []string, pos *int, commandTerminator string) []string {
 	commandLine := make([]string, 0)
 	for *pos < len(args) {
 		a := args[*pos]
@@ -74,5 +74,5 @@ func extractCommandLine(h *highlighter.Highlighter, args []string, pos *int, com
 		}
 		commandLine = append(commandLine, a)
 	}
-	h.SetCommandLine(commandLine)
+	return commandLine
 }

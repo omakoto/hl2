@@ -26,7 +26,7 @@ cd $here || die "$0: can't chdir to $here."
 num_pass=0
 num_fail=0
 
-../scripts/build.sh
+../scripts/build.sh || exit 1
 
 for r in t*.rules ; do
   name=$(basename $r .rules)

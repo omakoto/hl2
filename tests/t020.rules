@@ -1,6 +1,6 @@
 #!/bin/sh
 IGNORE=''''
-exec "$(dirname "$0")"/../bin/hl2 $debug $options --width 120 -n -r "$0" -f "$(dirname "$0")"/ascii.txt
+exec "$(dirname "$0")"/../bin/hl2 $debug $options --width 120 -n -r "$0" -f "$(dirname "$0")"/ascii.txt "$(dirname "$0")"/ascii.txt
 '''
 
 [[rule]]

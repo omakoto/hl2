@@ -14,8 +14,6 @@ import (
 type Highlighter struct {
 	term term.Term
 
-	commandLine []string
-
 	ignoreCase  bool
 	defaultHide bool
 
@@ -73,14 +71,6 @@ func (h *Highlighter) LoadToml(ruleFile string) error {
 
 func (h *Highlighter) AddRule(r *rules.Rule) {
 	h.rules = append(h.rules, r)
-}
-
-func (h *Highlighter) SetCommandLine(commandLine []string) {
-	h.commandLine = commandLine
-}
-
-func (h *Highlighter) CommandLine() []string {
-	return h.commandLine
 }
 
 func (h *Highlighter) AddSimpleRule(simple *simpleparser.Simple) error {
