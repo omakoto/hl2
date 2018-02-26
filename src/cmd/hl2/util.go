@@ -6,6 +6,12 @@ import (
 )
 
 func Fatalf(format string, args ...interface{}) {
-	fmt.Fprintf(os.Stderr, Name+": "+format, args...)
+	msg := fmt.Sprintf(Name+": "+format, args...)
+	fmt.Fprint(os.Stderr, msg)
+
+	if msg[len(msg)-1] != '\n' {
+		fmt.Fprint(os.Stderr, "\n")
+	}
+
 	os.Exit(1)
 }
