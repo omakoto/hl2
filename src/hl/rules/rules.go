@@ -24,6 +24,8 @@ func NewDecorativeLine(context hl.Context, marker string, colors *colors.Colors)
 }
 
 type Rule struct {
+	context hl.Context
+
 	Matcher    matcher.Matcher
 	PreMatcher matcher.Matcher
 
@@ -44,6 +46,10 @@ type Rule struct {
 	NextState string
 }
 
+func NewRule(context hl.Context) *Rule {
+	return &Rule{context: context}
+}
+
 func (r *Rule) IsForState(state string) bool {
 	if len(r.States) == 0 {
 		return true
@@ -54,4 +60,22 @@ func (r *Rule) IsForState(state string) bool {
 		}
 	}
 	return false
+}
+
+func (r *Rule) SetMatcher(pattern string) error {
+	m, err := matcher.CompileWithContext(r.context, pattern)
+	if err != nil {
+		return err
+	}
+	r.Matcher = m
+	return nil
+}
+
+func (r *Rule) SetPreMatcher(pattern string) error {
+	m, err := matcher.CompileWithContext(r.context, pattern)
+	if err != nil {
+		return err
+	}
+	r.PreMatcher = m
+	return nil
 }

@@ -4,7 +4,6 @@ import (
 	"errors"
 	"github.com/omakoto/hl2/src/hl"
 	"github.com/omakoto/hl2/src/hl/colors"
-	"github.com/omakoto/hl2/src/hl/matcher"
 	"github.com/omakoto/hl2/src/hl/rules"
 	"github.com/omakoto/hl2/src/hl/term"
 	"strings"
@@ -20,13 +19,12 @@ func NewSimple(pattern, colors string) *Simple {
 }
 
 func (s *Simple) ToRule(context hl.Context) (*rules.Rule, error) {
-	rule := rules.Rule{}
+	rule := rules.NewRule(context)
 
 	rule.Show = true
 
 	// Pattern
-	var err error
-	rule.Matcher, err = matcher.CompileWithContext(context, s.pattern)
+	err := rule.SetMatcher(s.pattern)
 	if err != nil {
 		return nil, err
 	}
@@ -61,5 +59,5 @@ func (s *Simple) ToRule(context hl.Context) (*rules.Rule, error) {
 		}
 	}
 
-	return &rule, nil
+	return rule, nil
 }

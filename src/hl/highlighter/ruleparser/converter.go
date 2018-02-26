@@ -4,32 +4,29 @@ import (
 	"errors"
 	"github.com/omakoto/hl2/src/hl"
 	"github.com/omakoto/hl2/src/hl/colors"
-	"github.com/omakoto/hl2/src/hl/matcher"
 	"github.com/omakoto/hl2/src/hl/rules"
 	"github.com/omakoto/hl2/src/hl/term"
 )
 
 func (ir *SingleRule) ToRule(context hl.Context) (*rules.Rule, error) {
-	or := rules.Rule{}
+	or := rules.NewRule(context)
 
 	or.Show = ir.Show
 	or.Hide = ir.Hide
 	or.Stop = ir.Stop
 
 	// Matcher
-	m, err := matcher.CompileWithContext(context, ir.Pattern)
+	err := or.SetMatcher(ir.Pattern)
 	if err != nil {
 		return nil, err
 	}
-	or.Matcher = m
 
 	// Prematcher
 	if ir.When != "" {
-		m, err = matcher.CompileWithContext(context, ir.When)
+		err := or.SetPreMatcher(ir.When)
 		if err != nil {
 			return nil, err
 		}
-		or.PreMatcher = m
 	}
 
 	// States
@@ -82,5 +79,5 @@ func (ir *SingleRule) ToRule(context hl.Context) (*rules.Rule, error) {
 		or.Before = ir.Before
 	}
 
-	return &or, nil
+	return or, nil
 }

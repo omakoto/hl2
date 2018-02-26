@@ -107,12 +107,12 @@ func (h *Highlighter) AddSimpleRangeRules(start, end *simpleparser.Simple) error
 	h.AddRule(er)
 
 	// Add a rule to show all lines between start and end.
-	intermediate := rules.Rule{}
+	intermediate := rules.NewRule(h)
 	m, _ := matcher.CompileWithContext(h, "^")
 	intermediate.Matcher = m
 	intermediate.States = []string{implicitState}
 	intermediate.Show = true
-	h.AddRule(&intermediate)
+	h.AddRule(intermediate)
 
 	// Start rule.
 	sr, err := start.ToRule(h)
