@@ -71,10 +71,10 @@ func Color256ToIndex(r, g, b uint8) uint8 {
 		return 0
 	}
 	half := max / 2
-	var ret uint8 = 0
+	var ret uint8
 
 	if r >= half {
-		ret += 1
+		ret++
 	}
 	if g >= half {
 		ret += 2

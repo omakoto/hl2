@@ -19,6 +19,4 @@ go test -v -race ./...                   # Run all the tests with the race detec
 
 go vet ./...                             # go vet is the official Go static analyzer
 megacheck ./...                          # "go vet on steroids" + linter
-# golint -set_exit_status $(go list ./...) # one last linter
-
-# "${0%/*}"/e2e-test.sh
+golint -set_exit_status src/...          # one last linter

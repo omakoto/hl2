@@ -22,7 +22,6 @@ func CompileWithContext(context hl.Context, pattern string) (Matcher, error) {
 func Compile(pattern string, flags Flags) (Matcher, error) {
 	if NoPcre {
 		return CompileGo(pattern, flags)
-	} else {
-		return CompilePcre(pattern, flags)
 	}
+	return CompilePcre(pattern, flags)
 }

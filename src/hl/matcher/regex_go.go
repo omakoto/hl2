@@ -11,20 +11,20 @@ const (
 	IgnoreCase Flags = 1 << iota
 )
 
-type MatcherGo struct {
+type matcherGo struct {
 	srcPattern  string
 	realPattern string
 	negate      bool
 	pattern     *regexp.Regexp
 }
 
-var _ = Matcher((*MatcherGo)(nil))
+var _ = Matcher((*matcherGo)(nil))
 
-func (r *MatcherGo) String() string {
+func (r *matcherGo) String() string {
 	return r.srcPattern
 }
 
-func CompileGo(pattern string, flags Flags) (*MatcherGo, error) {
+func CompileGo(pattern string, flags Flags) (*matcherGo, error) {
 	negate := false
 
 	realPattern := pattern
@@ -40,10 +40,10 @@ func CompileGo(pattern string, flags Flags) (*MatcherGo, error) {
 		return nil, err
 	}
 
-	return &MatcherGo{srcPattern: pattern, realPattern: realPattern, negate: negate, pattern: pat}, nil
+	return &matcherGo{srcPattern: pattern, realPattern: realPattern, negate: negate, pattern: pat}, nil
 }
 
-func (r *MatcherGo) Matches(target []byte) [][]int {
+func (r *matcherGo) Matches(target []byte) [][]int {
 	if r.negate {
 		if !r.pattern.Match(target) {
 			return [][]int{{0, len(target)}}

@@ -5,20 +5,20 @@ import (
 	"github.com/d4l3k/go-pcre"
 )
 
-type MatcherPcre struct {
+type matcherPcre struct {
 	srcPattern  string
 	realPattern string
 	negate      bool
 	pattern     *pcre.Regexp
 }
 
-var _ = Matcher((*MatcherPcre)(nil))
+var _ = Matcher((*matcherPcre)(nil))
 
-func (r *MatcherPcre) String() string {
+func (r *matcherPcre) String() string {
 	return r.srcPattern
 }
 
-func CompilePcre(pattern string, flags Flags) (*MatcherPcre, error) {
+func CompilePcre(pattern string, flags Flags) (*matcherPcre, error) {
 	negate := false
 
 	realPattern := pattern
@@ -35,10 +35,10 @@ func CompilePcre(pattern string, flags Flags) (*MatcherPcre, error) {
 		return nil, err
 	}
 
-	return &MatcherPcre{srcPattern: pattern, realPattern: realPattern, negate: negate, pattern: &pat}, nil
+	return &matcherPcre{srcPattern: pattern, realPattern: realPattern, negate: negate, pattern: &pat}, nil
 }
 
-func (r *MatcherPcre) Matches(target []byte) [][]int {
+func (r *matcherPcre) Matches(target []byte) [][]int {
 	if r.negate {
 		if !r.pattern.Matcher(target, 0).Matches() {
 			return [][]int{{0, len(target)}}

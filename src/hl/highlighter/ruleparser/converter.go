@@ -70,7 +70,7 @@ func (ir *SingleRule) ToRule(context hl.Context) (*rules.Rule, error) {
 	// After / before
 	if ir.Hide {
 		if ir.After > 0 || ir.Before > 0 {
-			return nil, errors.New("Hidden rules can't have after/before.")
+			return nil, errors.New("hidden rules can't have after/before")
 		}
 	}
 	or.After = context.DefaultAfter()
