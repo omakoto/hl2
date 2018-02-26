@@ -45,6 +45,43 @@ func init() {
 	getopt.FlagLong(&matcher.NoPcre, "no-pcre", 'N', "Disable PCRE and use Go's regexp engine instead.")
 
 	executeOption.SetOptional()
+
+	getopt.SetUsage(usage)
+}
+
+func usage() {
+	os.Stderr.WriteString(`
+hl2: Versatile coloring filter
+
+Usage:
+  hl2 -r RULE_TOML [OPTIONS]    (Read rules from RULE_TOML)
+  hl2 [OPTIONS] COLOR-SPEC...   (Give color spec from command line)
+  hl2 -c    [OPTIONS] COMMAND [ARGS...] [, FILTER-SPEC...]   (Apply to command output; -r can be used too)
+  hl2 -cSEP [OPTIONS] COMMAND [ARGS...] [SEP FILTER-SPEC...] (Same as above but use arbitrary separator)
+
+  FILTER-SPEC is a list of:
+    PATTERN [ COLOR-SPEC ]
+    PATTERN [ COLOR-SPEC ] '-' PATTERN [ COLOR-SPEC ] (Implies -n. '-' can be changed with -s)
+
+  COLOR-SPEC is:
+    '@' [ATTRS] [FG-COLOR] [/BG-COLOR] [ '@' [ATTRS] [LINE-FG-COLOR] [/LINE-BG-COLOR] ]
+
+  ATTRS is a set of:
+    b: Bold / intense
+    i: Italic
+    f: Faint
+    u: Underline
+    s: Strike-through
+
+  COLOR is any of:
+    black | red | green | yellow | blue | magenta | cyan | white
+    [0-5][0-5][0-5]     (RGB: 216 colors)
+    [0-9a-f]{6}         (RRGGBB: 24bit colors)
+
+Options:
+`)
+	getopt.CommandLine.PrintOptions(os.Stderr)
+	os.Stderr.WriteString("\n")
 }
 
 func getCommandTerminator() string {
