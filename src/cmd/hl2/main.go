@@ -33,7 +33,7 @@ var (
 	width          = getopt.IntLong("width", 'w', term.GetTermWidth(), "Set terminal width, used for pre and post lines.")
 	cpuprofile     = getopt.StringLong("cpuprofile", 'P', "", "Write cpu profile to file.")
 	help           = getopt.BoolLong("help", 'h', "Show this help.")
-	noTtyWarning   = getopt.BoolLong("no-tty-warning", 'q', "Don't show warning even when stdin is tty")
+	noTtyWarning   = getopt.BoolLong("no-tty-warning", 'q', "Don't show warning even when stdin is tty.")
 	inFile         = getopt.StringLong("input", 'f', "", "Read input from specified file instead of stdins.")
 	rangeSeparator = getopt.StringLong("range-separator", 's', RangeSeparator, "Specify range separator. (default="+RangeSeparator+")")
 
