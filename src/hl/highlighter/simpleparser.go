@@ -1,4 +1,4 @@
-package simpleparser
+package highlighter
 
 import (
 	"errors"
@@ -9,30 +9,21 @@ import (
 	"strings"
 )
 
-type Simple struct {
-	pattern string
-	colors  string
-}
-
-func NewSimple(pattern, colors string) *Simple {
-	return &Simple{pattern, colors}
-}
-
-func (s *Simple) ToRule(context hl.Context) (*rules.Rule, error) {
+func simpleToRule(context hl.Context, pattern, colorsStr string) (*rules.Rule, error) {
 	rule := rules.NewRule(context)
 
 	rule.Show = true
 
 	// Pattern
-	err := rule.SetMatcher(s.pattern)
+	err := rule.SetMatcher(pattern)
 	if err != nil {
 		return nil, err
 	}
 
 	// Colors
-	vals := strings.Split(s.colors, "@")
+	vals := strings.Split(colorsStr, "@")
 	if len(vals) > 3 || len(vals[0]) > 0 {
-		return nil, errors.New("Invalid pattern; too many @'s in '" + s.colors + "', or it doesn't start with @.")
+		return nil, errors.New("Invalid pattern; too many @'s in '" + colorsStr + "', or it doesn't start with @.")
 	}
 
 	toColors := func(spec string) (*term.RenderedColors, error) {

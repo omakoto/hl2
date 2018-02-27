@@ -22,7 +22,7 @@ func GetTermWidth() int {
 	return width
 }
 
-func NewTerm() Term {
+func NewDefaultTerm() Term {
 	var t Term
 	termEnv := os.Getenv("TERM")
 	if strings.HasPrefix(termEnv, "xterm") {

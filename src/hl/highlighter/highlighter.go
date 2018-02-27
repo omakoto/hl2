@@ -3,8 +3,6 @@ package highlighter
 import (
 	"fmt"
 	"github.com/omakoto/hl2/src/hl"
-	"github.com/omakoto/hl2/src/hl/highlighter/ruleparser"
-	"github.com/omakoto/hl2/src/hl/highlighter/simpleparser"
 	"github.com/omakoto/hl2/src/hl/matcher"
 	"github.com/omakoto/hl2/src/hl/rules"
 	"github.com/omakoto/hl2/src/hl/term"
@@ -25,23 +23,29 @@ type Highlighter struct {
 
 var _ = hl.Context((*Highlighter)(nil))
 
-func NewHighlighter(t term.Term, ignoreCase, defaultHide bool, defaultBefore, defaultAfter int) *Highlighter {
-	return &Highlighter{
-		term:          t,
-		ignoreCase:    ignoreCase,
-		defaultHide:   defaultHide,
-		defaultBefore: defaultBefore,
-		defaultAfter:  defaultAfter,
-		rules:         make([]*rules.Rule, 0),
-	}
+func NewHighlighter() *Highlighter {
+	h := &Highlighter{}
+	h.SetTerm(term.NewDefaultTerm())
+	return h
 }
 
 func (h *Highlighter) Term() term.Term {
 	return h.term
 }
 
+func (h *Highlighter) SetTerm(t term.Term) {
+	if t == nil {
+		t = term.NewDefaultTerm()
+	}
+	h.term = t
+}
+
 func (h *Highlighter) IgnoreCase() bool {
 	return h.ignoreCase
+}
+
+func (h *Highlighter) SetIgnoreCase(ignoreCase bool) {
+	h.ignoreCase = ignoreCase
 }
 
 func (h *Highlighter) DefaultHide() bool {
@@ -56,29 +60,39 @@ func (h *Highlighter) DefaultAfter() int {
 	return h.defaultAfter
 }
 
+func (h *Highlighter) SetDefaultAfter(defaultAfter int) {
+	h.defaultAfter = defaultAfter
+}
+
 func (h *Highlighter) DefaultBefore() int {
 	return h.defaultBefore
 }
 
-func (h *Highlighter) LoadToml(ruleFile string) error {
-	rules, err := ruleparser.ParseFile(h, ruleFile)
-	if err != nil {
-		return err
+func (h *Highlighter) SetDefaultBefore(defaultBefore int) {
+	h.defaultBefore = defaultBefore
+}
+
+func (h *Highlighter) getRules() []*rules.Rule {
+	if h.rules == nil {
+		h.rules = make([]*rules.Rule, 0)
 	}
-	h.rules = append(h.rules, rules...)
-	return nil
+	return h.rules
+}
+
+func (h *Highlighter) LoadToml(ruleFile string) error {
+	return h.parseTomlFile(ruleFile)
 }
 
 func (h *Highlighter) AddRule(r *rules.Rule) {
-	h.rules = append(h.rules, r)
+	h.rules = append(h.getRules(), r)
 }
 
-func (h *Highlighter) AddSimpleRule(simple *simpleparser.Simple) error {
-	util.Dump("Adding simple rule: ", simple)
-	rule, err := simple.ToRule(h)
+func (h *Highlighter) AddSimpleRule(pattern, colorsStr string) error {
+	rule, err := simpleToRule(h, pattern, colorsStr)
 	if err != nil {
 		return err
 	}
+	util.Dump("Adding simple rule: ", rule)
 	rule.After = h.defaultAfter
 	rule.Before = h.defaultBefore
 
@@ -88,7 +102,16 @@ func (h *Highlighter) AddSimpleRule(simple *simpleparser.Simple) error {
 
 var rangeRuleNext = 0
 
-func (h *Highlighter) AddSimpleRangeRules(start, end *simpleparser.Simple) error {
+func (h *Highlighter) AddSimpleRangeRules(patternStart, colorsStart, patternEnd, colorsEnd string) error {
+	start, err := simpleToRule(h, patternStart, colorsStart)
+	if err != nil {
+		return err
+	}
+	end, err := simpleToRule(h, patternEnd, colorsEnd)
+	if err != nil {
+		return err
+	}
+
 	util.Dump("Adding simple rule range start: ", start)
 	util.Dump("Adding simple rule range end: ", end)
 
@@ -96,15 +119,11 @@ func (h *Highlighter) AddSimpleRangeRules(start, end *simpleparser.Simple) error
 	rangeRuleNext++
 
 	// End rule.
-	er, err := end.ToRule(h)
-	if err != nil {
-		return err
-	}
-	er.After = h.defaultAfter
-	er.NextState = rules.InitialState
-	er.States = []string{implicitState}
-	er.Show = true
-	h.AddRule(er)
+	end.After = h.defaultAfter
+	end.NextState = rules.InitialState
+	end.States = []string{implicitState}
+	end.Show = true
+	h.AddRule(end)
 
 	// Add a rule to show all lines between start and end.
 	intermediate := rules.NewRule(h)
@@ -115,14 +134,10 @@ func (h *Highlighter) AddSimpleRangeRules(start, end *simpleparser.Simple) error
 	h.AddRule(intermediate)
 
 	// Start rule.
-	sr, err := start.ToRule(h)
-	if err != nil {
-		return err
-	}
-	sr.Before = h.defaultBefore
-	sr.NextState = implicitState
-	sr.Show = true
-	h.AddRule(sr)
+	start.Before = h.defaultBefore
+	start.NextState = implicitState
+	start.Show = true
+	h.AddRule(start)
 
 	return nil
 }

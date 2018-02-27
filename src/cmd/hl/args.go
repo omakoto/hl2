@@ -2,7 +2,6 @@ package main
 
 import (
 	"github.com/omakoto/hl2/src/hl/highlighter"
-	"github.com/omakoto/hl2/src/hl/highlighter/simpleparser"
 	"strings"
 )
 
@@ -53,11 +52,11 @@ func parseArgs(h *highlighter.Highlighter, args []string, takeInput bool, argume
 		pattern, colors := nextPatternAndColors()
 
 		if peek(0) != argumentSeparator {
-			h.AddSimpleRule(simpleparser.NewSimple(pattern, colors))
+			h.AddSimpleRule(pattern, colors)
 		} else {
 			pos++
 			pattern2, colors2 := nextPatternAndColors()
-			h.AddSimpleRangeRules(simpleparser.NewSimple(pattern, colors), simpleparser.NewSimple(pattern2, colors2))
+			h.AddSimpleRangeRules(pattern, colors, pattern2, colors2)
 			h.SetDefaultHide(true) // Range patterns imply -n.
 		}
 	}

@@ -106,7 +106,11 @@ func main() {
 	preprocessOptions()
 
 	// Initialize highlighter.
-	h := highlighter.NewHighlighter(term.NewTerm(), *ignoreCase, *defaultHide, *before, *after)
+	h := highlighter.NewHighlighter()
+	h.SetIgnoreCase(*ignoreCase)
+	h.SetDefaultHide(*defaultHide)
+	h.SetDefaultBefore(*before)
+	h.SetDefaultAfter(*after)
 	util.Dump("Highlighter (start): ", h)
 
 	// Process -c and -f, and also extract simple (inline) rules.
