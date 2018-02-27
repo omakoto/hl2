@@ -12,6 +12,7 @@ var (
 	colorsRe = regexp.MustCompile(`^(?i)\s*(?:([bifus]*)\s*` + colorPat + `)?\s*(?:\/\s*` + colorPat + `)?\s*$`)
 )
 
+// FromString parses a string into a Colors.
 func FromString(s string) (*Colors, error) {
 	c := Colors{}
 	err := c.UnmarshalText([]byte(s))
@@ -21,6 +22,7 @@ func FromString(s string) (*Colors, error) {
 	return &c, nil
 }
 
+// FromString parses a []byte into a Colors.
 func (c *Colors) UnmarshalText(text []byte) error {
 	if len(text) == 0 {
 		*c = Colors{}
@@ -85,7 +87,7 @@ func parseColor(name, rgb216, r8, g8, b8 []byte) Color {
 		return NewIndexColor(4) // blue
 	}
 	if rgb216 != nil {
-		return NewRgb216Color(rgb216[0]-'0', rgb216[1]-'0', rgb216[2]-'0')
+		return newRgb216Color(rgb216[0]-'0', rgb216[1]-'0', rgb216[2]-'0')
 	}
 	if r8 == nil {
 		return NoColor
@@ -106,5 +108,5 @@ func parseColor(name, rgb216, r8, g8, b8 []byte) Color {
 		return uint8(hexToDec(v[0])*16 + hexToDec(v[1]))
 	}
 
-	return NewRgb888Color(parseHex(r8), parseHex(g8), parseHex(b8))
+	return newRgb888Color(parseHex(r8), parseHex(g8), parseHex(b8))
 }
