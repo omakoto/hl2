@@ -1,0 +1,9 @@
+---
+0   00  00000000    NUL null
+1   01  00000001    SOH start of header
+3   03  00000011    ETX end of text             b2
+---
+124 7C  01111100    |   vertical bar            a2
+125 7D  01111101    }   right curly bracket
+126 7E  01111110    ~   tilde
+---

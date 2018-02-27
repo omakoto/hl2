@@ -1,0 +1,7 @@
+0   00  00000000    NUL null
+1   01  00000001    SOH start of header
+2   02  00000010    STX start of text           b2
+---
+125 7D  01111101    }   right curly bracket     a2
+126 7E  01111110    ~   tilde
+127 7F  01111111    DEL delete

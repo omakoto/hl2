@@ -1,0 +1,5 @@
+0   00  00000000    NUL null
+1   01  00000001    SOH start of header         b2
+---
+126 7E  01111110    ~   tilde                   a2
+127 7F  01111111    DEL delete

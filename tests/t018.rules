@@ -18,9 +18,9 @@ show = true
 after = 2
 
 [[rule]]
-pattern = '''a4'''
+pattern = '''a3'''
 show = true
-after = 4
+after = 3
 
 [[rule]]
 pattern = '''b1'''
@@ -33,6 +33,6 @@ show = true
 before = 2
 
 [[rule]]
-pattern = '''b4'''
+pattern = '''b3'''
 show = true
-before = 4
+before = 3
