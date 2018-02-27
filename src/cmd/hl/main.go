@@ -48,17 +48,26 @@ func usage() {
 	os.Stderr.WriteString(`
 hl: Versatile coloring filter
 
-Usage:
-  TODO FIX hl -r RULE_TOML [OPTIONS]    (Read rules from RULE_TOML)
-  TODO FIX hl [OPTIONS] COLOR-SPEC...   (Give color spec from command line)
-  TODO FIX hl -c    [OPTIONS] COMMAND [ARGS...] [, FILTER-SPEC...]   (Apply to command output; -r can be used too)
-  TODO FIX hl -cSEP [OPTIONS] COMMAND [ARGS...] [SEP FILTER-SPEC...] (Same as above but use arbitrary separator)
-  TODO FIX hl -f    [OPTIONS] FILES... [, FILTER-SPEC...]   (Apply to FILES; -r can be used too)
-  TODO FIX hl -fSEP [OPTIONS] FILES... [SEP FILTER-SPEC...] (Same as above but use arbitrary separator)
+Basic usage: 
+  hl [ -r RULE_TOML ] [OPTIONS] [ FILTER-SPEC... ] <FILE
+    Read FILE and apply filters/colors.
+    
+    If FILTER-SPECs contain a range, or a -n option is given,
+    it'll only print lines matching given PATTERNs, or
+    lines in the ranges given by FILER-SPECs.
+    When -A, -B or -C is given, "context" lines will also be
+    printed.
+
+  hl -f [ -r RULE_TOML ] [OPTIONS] FILE... , [ FILTER-SPEC... ]
+    Read FILE(s) and apply filers/colors.
+		
+  hl -c [-2] [ -r RULE_TOML ] [OPTIONS] COMMAND [ARG...] , [ FILTER-SPEC... ]
+    Execute COMMAND and apply filters/colors to its stdout output.
+    If a -2 option is given, the stderr output will be processed too.
 
   FILTER-SPEC is a list of:
     PATTERN [ COLOR-SPEC ]
-    PATTERN [ COLOR-SPEC ] '-' PATTERN [ COLOR-SPEC ] (Implies -n. '-' can be changed with -s)
+    PATTERN [ COLOR-SPEC ] ',' PATTERN [ COLOR-SPEC ]
 
   COLOR-SPEC is:
     '@' [ATTRS] [FG-COLOR] [/BG-COLOR] [ '@' [ATTRS] [LINE-FG-COLOR] [/LINE-BG-COLOR] ]
