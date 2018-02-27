@@ -1,4 +1,4 @@
-package rules
+package highlighter
 
 import (
 	"github.com/omakoto/hl2/src/hl"
@@ -9,15 +9,15 @@ import (
 
 const InitialState = "INIT"
 
-type DecorativeLine struct {
+type decorativeLine struct {
 	Marker []byte
 	Colors *term.RenderedColors
 }
 
-func NewDecorativeLine(context hl.Context, marker string, colors *colors.Colors) *DecorativeLine {
+func newDecorativeLine(context hl.Context, marker string, colors *colors.Colors) *decorativeLine {
 	t := context.Term()
 	c := term.NewRenderedColors(t, colors)
-	return &DecorativeLine{
+	return &decorativeLine{
 		Marker: []byte(marker),
 		Colors: c,
 	}
@@ -26,36 +26,36 @@ func NewDecorativeLine(context hl.Context, marker string, colors *colors.Colors)
 type Rule struct {
 	context hl.Context
 
-	Matcher    matcher.Matcher
-	PreMatcher matcher.Matcher
+	matcher    matcher.Matcher
+	preMatcher matcher.Matcher
 
-	After  int
-	Before int
+	after  int
+	before int
 
-	Show bool
-	Hide bool
-	Stop bool
+	show bool
+	hide bool
+	stop bool
 
-	MatchColors *term.RenderedColors
-	LineColors  *term.RenderedColors
+	matchColors *term.RenderedColors
+	lineColors  *term.RenderedColors
 
-	PreLine  *DecorativeLine
-	PostLine *DecorativeLine
+	preLine  *decorativeLine
+	postLine *decorativeLine
 
-	States    []string
-	NextState string
+	states    []string
+	nextState string
 }
 
-func NewRule(context hl.Context) *Rule {
+func newRule(context hl.Context) *Rule {
 	return &Rule{context: context}
 }
 
-func (r *Rule) IsForState(state string) bool {
-	if len(r.States) == 0 {
+func (r *Rule) isForState(state string) bool {
+	if len(r.states) == 0 {
 		return true
 	}
-	for i := 0; i < len(r.States); i++ {
-		if r.States[i] == state {
+	for i := 0; i < len(r.states); i++ {
+		if r.states[i] == state {
 			return true
 		}
 	}
@@ -67,7 +67,7 @@ func (r *Rule) SetMatcher(pattern string) error {
 	if err != nil {
 		return err
 	}
-	r.Matcher = m
+	r.matcher = m
 	return nil
 }
 
@@ -76,36 +76,36 @@ func (r *Rule) SetPreMatcher(pattern string) error {
 	if err != nil {
 		return err
 	}
-	r.PreMatcher = m
+	r.preMatcher = m
 	return nil
 }
 
 func (r *Rule) SetBefore(n int) {
-	r.Before = n
+	r.before = n
 }
 
 func (r *Rule) SetAfter(n int) {
-	r.After = n
+	r.after = n
 }
 
 func (r *Rule) SetShow(v bool) {
-	r.Show = v
+	r.show = v
 }
 
 func (r *Rule) SetHide(v bool) {
-	r.Hide = v
+	r.hide = v
 }
 
 func (r *Rule) SetStop(v bool) {
-	r.Stop = v
+	r.stop = v
 }
 
 func (r *Rule) SetStates(states []string) {
-	r.States = states
+	r.states = states
 }
 
 func (r *Rule) SetNextState(s string) {
-	r.NextState = s
+	r.nextState = s
 }
 
 func (r *Rule) SetMatchColors(colorsStr string) error {
@@ -113,7 +113,7 @@ func (r *Rule) SetMatchColors(colorsStr string) error {
 	if err != nil {
 		return err
 	}
-	r.MatchColors = term.NewRenderedColors(r.context.Term(), c)
+	r.matchColors = term.NewRenderedColors(r.context.Term(), c)
 	return nil
 }
 
@@ -122,7 +122,7 @@ func (r *Rule) SetLineColors(colorsStr string) error {
 	if err != nil {
 		return err
 	}
-	r.LineColors = term.NewRenderedColors(r.context.Term(), c)
+	r.lineColors = term.NewRenderedColors(r.context.Term(), c)
 	return nil
 }
 
@@ -131,7 +131,7 @@ func (r *Rule) SetPreLine(marker, colorsStr string) error {
 	if err != nil {
 		return err
 	}
-	r.PreLine = NewDecorativeLine(r.context, marker, c)
+	r.preLine = newDecorativeLine(r.context, marker, c)
 	return nil
 }
 
@@ -140,6 +140,6 @@ func (r *Rule) SetPostLine(marker, colorsStr string) error {
 	if err != nil {
 		return err
 	}
-	r.PostLine = NewDecorativeLine(r.context, marker, c)
+	r.postLine = newDecorativeLine(r.context, marker, c)
 	return nil
 }

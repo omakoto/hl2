@@ -3,9 +3,6 @@ package highlighter
 import (
 	"errors"
 	"github.com/BurntSushi/toml"
-	"github.com/omakoto/hl2/src/hl/colors"
-	"github.com/omakoto/hl2/src/hl/rules"
-	"github.com/omakoto/hl2/src/hl/term"
 	"github.com/omakoto/hl2/src/hl/util"
 )
 
@@ -58,11 +55,11 @@ func (h *Highlighter) parseTomlFile(filename string) error {
 }
 
 func (h *Highlighter) addSingleRule(fr *FileRule) error {
-	or := rules.NewRule(h)
+	or := h.NewRule()
 
-	or.Show = fr.Show
-	or.Hide = fr.Hide
-	or.Stop = fr.Stop
+	or.SetShow(fr.Show)
+	or.SetHide(fr.Hide)
+	or.SetStop(fr.Stop)
 
 	// Matcher
 	err := or.SetMatcher(fr.Pattern)
@@ -79,38 +76,34 @@ func (h *Highlighter) addSingleRule(fr *FileRule) error {
 	}
 
 	// States
-	or.NextState = fr.NextState
-	or.States = fr.States
+	or.SetNextState(fr.NextState)
+	or.SetStates(fr.States)
 
 	// Colors
-	c, err := colors.FromString(fr.Colors)
+	err = or.SetMatchColors(fr.Colors)
 	if err != nil {
 		return err
 	}
-	or.MatchColors = term.NewRenderedColors(h.Term(), c)
 
 	// Line colors
-	c, err = colors.FromString(fr.LineColors)
+	err = or.SetLineColors(fr.Colors)
 	if err != nil {
 		return err
 	}
-	or.LineColors = term.NewRenderedColors(h.Term(), c)
 
 	// Pre/post lines
 	if fr.PreLine != "" {
-		c, err = colors.FromString(fr.PreLineColors)
+		err = or.SetPreLine(fr.PreLine, fr.PreLineColors)
 		if err != nil {
 			return err
 		}
-		or.PreLine = rules.NewDecorativeLine(h, fr.PreLine, c)
 	}
 
 	if fr.PostLine != "" {
-		c, err = colors.FromString(fr.PostLineColors)
+		err = or.SetPostLine(fr.PostLine, fr.PostLineColors)
 		if err != nil {
 			return err
 		}
-		or.PostLine = rules.NewDecorativeLine(h, fr.PostLine, c)
 	}
 
 	// After / before
@@ -119,15 +112,13 @@ func (h *Highlighter) addSingleRule(fr *FileRule) error {
 			return errors.New("hidden rules can't have after/before")
 		}
 	}
-	or.After = h.DefaultAfter()
-	or.Before = h.DefaultBefore()
+	or.SetAfter(h.DefaultAfter())
+	or.SetBefore(h.DefaultBefore())
 	if fr.After > 0 {
-		or.After = fr.After
+		or.after = fr.After
 	}
 	if fr.Before > 0 {
-		or.Before = fr.Before
+		or.before = fr.Before
 	}
-
-	h.AddRule(or)
 	return nil
 }

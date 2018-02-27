@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"github.com/omakoto/hl2/src/hl"
 	"github.com/omakoto/hl2/src/hl/matcher"
-	"github.com/omakoto/hl2/src/hl/rules"
 	"github.com/omakoto/hl2/src/hl/term"
 	"github.com/omakoto/hl2/src/hl/util"
 )
@@ -18,7 +17,7 @@ type Highlighter struct {
 	defaultBefore int
 	defaultAfter  int
 
-	rules []*rules.Rule
+	rules []*Rule
 }
 
 var _ = hl.Context((*Highlighter)(nil))
@@ -72,9 +71,9 @@ func (h *Highlighter) SetDefaultBefore(defaultBefore int) {
 	h.defaultBefore = defaultBefore
 }
 
-func (h *Highlighter) getRules() []*rules.Rule {
+func (h *Highlighter) getRules() []*Rule {
 	if h.rules == nil {
-		h.rules = make([]*rules.Rule, 0)
+		h.rules = make([]*Rule, 0)
 	}
 	return h.rules
 }
@@ -83,12 +82,12 @@ func (h *Highlighter) LoadToml(ruleFile string) error {
 	return h.parseTomlFile(ruleFile)
 }
 
-func (h *Highlighter) AddRule(r *rules.Rule) {
+func (h *Highlighter) AddRule(r *Rule) {
 	h.rules = append(h.getRules(), r)
 }
 
-func (h *Highlighter) NewRule() *rules.Rule {
-	r := rules.NewRule(h)
+func (h *Highlighter) NewRule() *Rule {
+	r := newRule(h)
 	h.rules = append(h.getRules(), r)
 	return r
 }
@@ -99,8 +98,8 @@ func (h *Highlighter) AddSimpleRule(pattern, colorsStr string) error {
 		return err
 	}
 	util.Dump("Adding simple rule: ", rule)
-	rule.After = h.defaultAfter
-	rule.Before = h.defaultBefore
+	rule.after = h.defaultAfter
+	rule.before = h.defaultBefore
 
 	h.AddRule(rule)
 	return nil
@@ -125,24 +124,24 @@ func (h *Highlighter) AddSimpleRangeRules(patternStart, colorsStart, patternEnd,
 	rangeRuleNext++
 
 	// End rule.
-	end.After = h.defaultAfter
-	end.NextState = rules.InitialState
-	end.States = []string{implicitState}
-	end.Show = true
+	end.after = h.defaultAfter
+	end.SetNextState(InitialState)
+	end.SetStates([]string{implicitState})
+	end.SetShow(true)
 	h.AddRule(end)
 
 	// Add a rule to show all lines between start and end.
-	intermediate := rules.NewRule(h)
+	intermediate := newRule(h)
 	m, _ := matcher.CompileWithContext(h, "^")
-	intermediate.Matcher = m
-	intermediate.States = []string{implicitState}
-	intermediate.Show = true
+	intermediate.matcher = m
+	intermediate.SetStates([]string{implicitState})
+	intermediate.SetShow(true)
 	h.AddRule(intermediate)
 
 	// Start rule.
-	start.Before = h.defaultBefore
-	start.NextState = implicitState
-	start.Show = true
+	start.before = h.defaultBefore
+	start.SetNextState(implicitState)
+	start.SetShow(true)
 	h.AddRule(start)
 
 	return nil

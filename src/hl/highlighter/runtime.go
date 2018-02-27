@@ -3,7 +3,6 @@ package highlighter
 import (
 	"bufio"
 	"bytes"
-	"github.com/omakoto/hl2/src/hl/rules"
 	"github.com/omakoto/hl2/src/hl/term"
 	"github.com/omakoto/hl2/src/hl/util"
 	"io"
@@ -15,7 +14,7 @@ var (
 )
 
 type MatchResult struct {
-	rule      *rules.Rule
+	rule      *Rule
 	positions [][]int
 }
 
@@ -101,8 +100,8 @@ func (h *Highlighter) NewRuntime(wr io.Writer) *Runtime {
 	r.matchesCache = make([]MatchResult, len(r.h.rules))
 
 	for _, rule := range r.h.rules {
-		if r.maxBefore < rule.Before {
-			r.maxBefore = rule.Before
+		if r.maxBefore < rule.before {
+			r.maxBefore = rule.before
 		}
 	}
 	r.beforeBuffer = util.NewStringRingBuffer(r.maxBefore)
@@ -234,8 +233,8 @@ func (r *Runtime) ColorBytes(b []byte) error {
 	if show {
 		for i := 0; i < numMatches; i++ {
 			rule := matches[i].rule
-			if rule.PreLine != nil {
-				r.writeDecorativeLine(rule.PreLine)
+			if rule.preLine != nil {
+				r.writeDecorativeLine(rule.preLine)
 			}
 		}
 	}
@@ -247,15 +246,15 @@ func (r *Runtime) ColorBytes(b []byte) error {
 	// First, apply the line colors.
 	for i := numMatches - 1; i >= 0; i-- {
 		rule := matches[i].rule
-		if rule.LineColors != nil {
-			r.colorsCache.applyColors(0, numBytes, rule.LineColors)
+		if rule.lineColors != nil {
+			r.colorsCache.applyColors(0, numBytes, rule.lineColors)
 		}
 	}
 	// Then, apply the match colors.
 	for i := numMatches - 1; i >= 0; i-- {
 		rule := matches[i].rule
-		if rule.MatchColors != nil {
-			r.colorsCache.applyColorsMulti(matches[i].positions, rule.MatchColors)
+		if rule.matchColors != nil {
+			r.colorsCache.applyColorsMulti(matches[i].positions, rule.matchColors)
 		}
 	}
 
@@ -290,8 +289,8 @@ func (r *Runtime) ColorBytes(b []byte) error {
 	if show {
 		for i := numMatches - 1; i >= 0; i-- {
 			rule := r.matchesCache[i].rule
-			if rule.PostLine != nil {
-				r.writeDecorativeLine(rule.PostLine)
+			if rule.postLine != nil {
+				r.writeDecorativeLine(rule.postLine)
 			}
 		}
 	}
@@ -306,42 +305,42 @@ func (r *Runtime) findMatches(b []byte, defaultShow bool) (matches []MatchResult
 	for i := 0; i < len(r.h.rules); i++ {
 		rule := r.h.rules[i]
 
-		if !rule.IsForState(r.state) {
+		if !rule.isForState(r.state) {
 			continue
 		}
-		if rule.PreMatcher != nil && rule.PreMatcher.Matches(b) == nil {
+		if rule.preMatcher != nil && rule.preMatcher.Matches(b) == nil {
 			continue
 		}
-		m := rule.Matcher.Matches(b)
+		m := rule.matcher.Matches(b)
 		if m == nil {
 			continue
 		}
-		util.Debugf("Matched=%s\n", rule.Matcher)
+		util.Debugf("Matched=%s\n", rule.matcher)
 
 		//util.Debugf("Matched=%v [%s @ %s]\n", m, rule.MatchColors, rule.LineColors)
-		if rule.NextState != "" {
-			r.state = rule.NextState
+		if rule.nextState != "" {
+			r.state = rule.nextState
 			util.Debugf("Next state=%s\n", r.state)
 		}
 		r.matchesCache[numMatches] = MatchResult{rule: rule, positions: m}
 		numMatches++
-		if rule.Hide {
+		if rule.hide {
 			show = false
 		}
-		if rule.Show {
+		if rule.show {
 			show = true
 		}
-		if rule.After > 0 && show {
-			thisAfter := rule.After + 1 // +1 because the current line consumes 1.
+		if rule.after > 0 && show {
+			thisAfter := rule.after + 1 // +1 because the current line consumes 1.
 			if after < thisAfter {
 				after = thisAfter
 			}
 		}
-		if before < rule.Before {
-			before = rule.Before
+		if before < rule.before {
+			before = rule.before
 		}
 
-		if rule.Stop {
+		if rule.stop {
 			break
 		}
 	}
@@ -349,7 +348,7 @@ func (r *Runtime) findMatches(b []byte, defaultShow bool) (matches []MatchResult
 	return
 }
 
-func (r *Runtime) writeDecorativeLine(d *rules.DecorativeLine) {
+func (r *Runtime) writeDecorativeLine(d *decorativeLine) {
 	w := r.writeCache
 
 	fg := d.Colors.FgCode()

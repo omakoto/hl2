@@ -22,6 +22,10 @@ func FromString(s string) (*Colors, error) {
 }
 
 func (c *Colors) UnmarshalText(text []byte) error {
+	if len(text) == 0 {
+		*c = Colors{}
+		return nil
+	}
 	captures := colorsRe.FindSubmatch(text)
 
 	if captures == nil {
