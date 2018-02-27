@@ -1,7 +1,0 @@
----
-10  0A  00001010    LF  line feed                       show
----
-12  0C  00001100    FF  form feed
-13  0D  00001101    CR  enter / carriage return
-14  0E  00001110    SO  shift out                       b2
----

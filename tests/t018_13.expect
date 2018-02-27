@@ -1,4 +1,7 @@
 ---
-9   09  00001001    HT  horizontal tab                  a2
-10  0A  00001010    LF  line feed                       show
+0   00  00000000    NUL null
+2   02  00000010    STX start of text           b1
+---
+125 7D  01111101    }   right curly bracket     a1
+126 7E  01111110    ~   tilde
 ---

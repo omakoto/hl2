@@ -1,5 +1,5 @@
-0   00  00000000    NUL null                            show
 ---
-10  0A  00001010    LF  line feed                       show
+1   01  00000001    SOH start of header         show
 ---
-32  20  00100000    Space   space                       show
+126 7E  01111110    ~   tilde                   show
+---

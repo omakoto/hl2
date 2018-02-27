@@ -1,7 +1,0 @@
----
-6   06  00000110    ACK acknowledge                     a2
-7   07  00000111    BEL bell
-8   08  00001000    BS  backspace
----
-10  0A  00001010    LF  line feed                       show
----
