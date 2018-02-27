@@ -86,7 +86,7 @@ func (h *Highlighter) addSingleRule(fr *FileRule) error {
 	}
 
 	// Line colors
-	err = or.SetLineColors(fr.Colors)
+	err = or.SetLineColors(fr.LineColors)
 	if err != nil {
 		return err
 	}
