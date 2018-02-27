@@ -87,6 +87,12 @@ func (h *Highlighter) AddRule(r *rules.Rule) {
 	h.rules = append(h.getRules(), r)
 }
 
+func (h *Highlighter) NewRule() *rules.Rule {
+	r := rules.NewRule(h)
+	h.rules = append(h.getRules(), r)
+	return r
+}
+
 func (h *Highlighter) AddSimpleRule(pattern, colorsStr string) error {
 	rule, err := simpleToRule(h, pattern, colorsStr)
 	if err != nil {
