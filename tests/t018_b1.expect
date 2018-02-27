@@ -1,0 +1,46 @@
+0   00  00000000    NUL null                    a1
+1   01  00000001    SOH start of header         show
+2   02  00000010    STX start of text           b1
+---
+4   04  00000100    EOT end of transmission     a1
+5   05  00000101    ENQ enquiry
+6   06  00000110    ACK acknowledge             show
+7   07  00000111    BEL bell
+8   08  00001000    BS  backspace               b1
+---
+10  0A  00001010    LF  line feed               a1
+11  0B  00001011    VT  vertical tab
+---
+13  0D  00001101    CR  enter / carriage return show
+---
+14  0E  00001110    SO  shift out
+16  10  00010000    DLE data link escape        b1
+---
+18  12  00010010    DC2 device control 2        a2
+19  13  00010011    DC3 device control 3        show
+20  14  00010100    DC4 device control 4        b2
+---
+22  16  00010110    SYN synchronize             a2
+23  17  00010111    ETB end of trans. block
+24  18  00011000    CAN cancel                  show
+25  19  00011001    EM  end of medium
+26  1A  00011010    SUB substitute              b2
+---
+28  1C  00011100    FS file separator           a2
+29  1D  00011101    GS  group separator
+30  1E  00011110    RS  record separator
+31  1F  00011111    US  unit separator          show
+32  20  00100000    Space   space
+33  21  00100001    !   exclamation mark
+34  22  00100010    "   double quote            b2
+---
+36  24  00100100    $   dollar                  a2
+37  25  00100101    %   percent
+38  26  00100110    &   ampersand
+---
+40  28  00101000    (   left parenthesis        show
+---
+41  29  00101001    )   right parenthesis
+42  2A  00101010    *   asterisk
+44  2C  00101100    ,   comma                   b2
+---
