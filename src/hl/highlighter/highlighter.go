@@ -24,19 +24,18 @@ var _ = hl.Context((*Highlighter)(nil))
 
 func NewHighlighter() *Highlighter {
 	h := &Highlighter{}
-	h.SetTerm(term.NewDefaultTerm())
+	h.term = term.NewDefaultTerm()
+	return h
+}
+
+func NewHighlighterWithTerm(t term.Term) *Highlighter {
+	h := &Highlighter{}
+	h.term = t
 	return h
 }
 
 func (h *Highlighter) Term() term.Term {
 	return h.term
-}
-
-func (h *Highlighter) SetTerm(t term.Term) {
-	if t == nil {
-		t = term.NewDefaultTerm()
-	}
-	h.term = t
 }
 
 func (h *Highlighter) IgnoreCase() bool {
