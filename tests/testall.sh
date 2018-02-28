@@ -9,7 +9,7 @@ if [[ "$WITH_DEBUGGER" == 1 ]] ; then
     debug=--debug
 fi
 
-export options="--no-pcre"
+export options="--read-buffer-size 4096"
 export debug
 
 bin=../bin/hl

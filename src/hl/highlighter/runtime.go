@@ -1,14 +1,17 @@
 package highlighter
 
 import (
-	"bufio"
 	"bytes"
 	"github.com/omakoto/hl2/src/hl/term"
+	"github.com/omakoto/hl2/src/hl/textio"
 	"github.com/omakoto/hl2/src/hl/util"
+	"github.com/pborman/getopt/v2"
 	"io"
 )
 
 var (
+	noCrSupport = getopt.BoolLong("no-cr-aware", 0, "Don't treat CRs as line terminator too. (faster)")
+
 	EmptyBytes   = []byte("")
 	HiddenMarker = []byte("---\n")
 )
@@ -121,10 +124,10 @@ func (r *Runtime) Finish() error {
 }
 
 func (r *Runtime) ColorReader(rd io.Reader) error {
-	br := bufio.NewReader(rd)
+	br := textio.NewLineReader(rd, !*noCrSupport)
 
 	for {
-		bytes, err := br.ReadBytes('\n')
+		bytes, err := br.ReadLine()
 		if len(bytes) > 0 {
 			e2 := r.ColorBytes(bytes)
 			if e2 != nil {
@@ -207,6 +210,13 @@ func (r *Runtime) maybeWriteHiddenMarker() error {
 }
 
 func (r *Runtime) ColorBytes(b []byte) error {
+	var lineTerminator []byte
+	lastIndex := len(b) - 1
+	last := b[lastIndex]
+	if last == '\r' || last == '\n' {
+		lineTerminator = b[lastIndex : lastIndex+1]
+		b = b[0:lastIndex]
+	}
 	b = bytes.TrimRight(b, "\r\n \t")
 	numBytes := len(b)
 
@@ -277,7 +287,7 @@ func (r *Runtime) ColorBytes(b []byte) error {
 	if len(lastFg) > 0 || len(lastBg) > 0 {
 		w.Write(r.h.Term().CsiReset())
 	}
-	w.WriteByte('\n')
+	w.Write(lineTerminator)
 
 	if show || r.remainingAfter > 0 {
 		r.printBody(w.Bytes())
