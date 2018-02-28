@@ -1,0 +1,5 @@
+#!/bin/sh
+IGNORE=''''
+echo $'LF XX\nCR XX\rLF XX\r\nNO-NEW-LINE' | "$(dirname "$0")"/../bin/hl $debug $options --width 120 CR LF
+exit $?
+'''
