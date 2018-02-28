@@ -214,7 +214,7 @@ func startCommand(commandLine []string) (io.ReadCloser, func()) {
 func doOnReader(h *highlighter.Highlighter, rd io.ReadCloser) {
 	defer rd.Close()
 
-	err := h.NewRuntime(os.Stdout).ColorReader(rd)
+	err := h.NewRuntime(os.Stdout).ColorReader(rd /*callFinish*/, true)
 	if err != nil {
 		Fatalf("Unknown failure: %s", err)
 	}

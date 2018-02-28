@@ -5,6 +5,7 @@ import (
 	"github.com/omakoto/hl2/src/hl/colors"
 	"github.com/omakoto/hl2/src/hl/matcher"
 	"github.com/omakoto/hl2/src/hl/term"
+	"github.com/omakoto/hl2/src/hl/util"
 )
 
 const InitialState = "INIT"
@@ -62,7 +63,7 @@ func (r *Rule) isForState(state string) bool {
 	return false
 }
 
-func (r *Rule) SetMatcher(pattern string) error {
+func (r *Rule) SetMatcherString(pattern string) error {
 	m, err := matcher.CompileWithContext(r.context, pattern)
 	if err != nil {
 		return err
@@ -71,7 +72,7 @@ func (r *Rule) SetMatcher(pattern string) error {
 	return nil
 }
 
-func (r *Rule) SetPreMatcher(pattern string) error {
+func (r *Rule) SetPreMatcherString(pattern string) error {
 	m, err := matcher.CompileWithContext(r.context, pattern)
 	if err != nil {
 		return err
@@ -108,7 +109,7 @@ func (r *Rule) SetNextState(s string) {
 	r.nextState = s
 }
 
-func (r *Rule) SetMatchColors(colorsStr string) error {
+func (r *Rule) SetMatchColorsString(colorsStr string) error {
 	c, err := colors.FromString(colorsStr)
 	if err != nil {
 		return err
@@ -117,7 +118,7 @@ func (r *Rule) SetMatchColors(colorsStr string) error {
 	return nil
 }
 
-func (r *Rule) SetLineColors(colorsStr string) error {
+func (r *Rule) SetLineColorsString(colorsStr string) error {
 	c, err := colors.FromString(colorsStr)
 	if err != nil {
 		return err
@@ -126,7 +127,7 @@ func (r *Rule) SetLineColors(colorsStr string) error {
 	return nil
 }
 
-func (r *Rule) SetPreLine(marker, colorsStr string) error {
+func (r *Rule) SetPreLineString(marker, colorsStr string) error {
 	c, err := colors.FromString(colorsStr)
 	if err != nil {
 		return err
@@ -135,11 +136,35 @@ func (r *Rule) SetPreLine(marker, colorsStr string) error {
 	return nil
 }
 
-func (r *Rule) SetPostLine(marker, colorsStr string) error {
+func (r *Rule) SetPostLineString(marker, colorsStr string) error {
 	c, err := colors.FromString(colorsStr)
 	if err != nil {
 		return err
 	}
 	r.postLine = newDecorativeLine(r.context, marker, c)
 	return nil
+}
+
+func (r *Rule) MustSetMatcherString(pattern string) {
+	util.Must(func() error { return r.SetMatcherString(pattern) })
+}
+
+func (r *Rule) MustSetPreMatcherString(pattern string) {
+	util.Must(func() error { return r.SetPreMatcherString(pattern) })
+}
+
+func (r *Rule) MustSetMatchColorsString(colorsStr string) {
+	util.Must(func() error { return r.SetMatchColorsString(colorsStr) })
+}
+
+func (r *Rule) MustSetLineColorsString(colorsStr string) {
+	util.Must(func() error { return r.SetLineColorsString(colorsStr) })
+}
+
+func (r *Rule) MustSetPreLineString(marker, colorsStr string) {
+	util.Must(func() error { return r.SetPreLineString(marker, colorsStr) })
+}
+
+func (r *Rule) MustSetPostLineString(marker, colorsStr string) {
+	util.Must(func() error { return r.SetPostLineString(marker, colorsStr) })
 }

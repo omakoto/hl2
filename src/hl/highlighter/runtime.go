@@ -12,24 +12,24 @@ import (
 var (
 	noCrSupport = getopt.BoolLong("no-cr-aware", 0, "Don't treat CRs as line terminator too. (faster)")
 
-	EmptyBytes   = []byte("")
-	HiddenMarker = []byte("---\n")
+	emptyBytes   = []byte("")
+	hiddenMarker = []byte("---\n")
 )
 
-type MatchResult struct {
+type matchResult struct {
 	rule      *Rule
 	positions [][]int
 }
 
-type ColorsCache struct {
+type colorsCache struct {
 	cache []*term.RenderedColors
 }
 
-func newColorsCache() ColorsCache {
-	return ColorsCache{cache: make([]*term.RenderedColors, 4096)}
+func newColorsCache() colorsCache {
+	return colorsCache{cache: make([]*term.RenderedColors, 4096)}
 }
 
-func (c *ColorsCache) prepare(lineByteCount int) {
+func (c *colorsCache) prepare(lineByteCount int) {
 	size := cap(c.cache)
 	if size < lineByteCount {
 		for size < lineByteCount {
@@ -43,7 +43,7 @@ func (c *ColorsCache) prepare(lineByteCount int) {
 	}
 }
 
-func (c *ColorsCache) applyColors(start, end int, colors *term.RenderedColors) {
+func (c *colorsCache) applyColors(start, end int, colors *term.RenderedColors) {
 	for i := start; i < end; i++ {
 		prev := c.cache[i]
 		if prev == nil {
@@ -56,33 +56,35 @@ func (c *ColorsCache) applyColors(start, end int, colors *term.RenderedColors) {
 	}
 }
 
-func (c *ColorsCache) applyColorsMulti(startEnds [][]int, colors *term.RenderedColors) {
+func (c *colorsCache) applyColorsMulti(startEnds [][]int, colors *term.RenderedColors) {
 	for i := 0; i < len(startEnds); i++ {
 		c.applyColors(startEnds[i][0], startEnds[i][1], colors)
 	}
 }
 
-func (c *ColorsCache) getFg(index int) []byte {
+func (c *colorsCache) getFg(index int) []byte {
 	if c.cache[index] != nil {
 		return c.cache[index].FgCode()
 	}
 	return nil
 }
 
-func (c *ColorsCache) getBg(index int) []byte {
+func (c *colorsCache) getBg(index int) []byte {
 	if c.cache[index] != nil {
 		return c.cache[index].BgCode()
 	}
 	return nil
 }
 
+// Runtime defines a Highlighter execution context.
+// Multiple Runtime's can be created for the same Highlighter instance.
 type Runtime struct {
 	h *Highlighter
 
 	wr io.Writer
 
-	colorsCache  ColorsCache
-	matchesCache []MatchResult
+	colorsCache  colorsCache
+	matchesCache []matchResult
 	writeCache   bytes.Buffer
 
 	maxBefore      int
@@ -96,11 +98,12 @@ type Runtime struct {
 	state string
 }
 
+// NewRuntime creates a new Runtime. Output will be written to wr.
 func (h *Highlighter) NewRuntime(wr io.Writer) *Runtime {
 	r := Runtime{h: h}
 
 	r.wr = wr
-	r.matchesCache = make([]MatchResult, len(r.h.rules))
+	r.matchesCache = make([]matchResult, len(r.h.rules))
 
 	for _, rule := range r.h.rules {
 		if r.maxBefore < rule.before {
@@ -113,6 +116,7 @@ func (h *Highlighter) NewRuntime(wr io.Writer) *Runtime {
 	return &r
 }
 
+// Finish finalizes the output.
 func (r *Runtime) Finish() error {
 	if r.numHiddenLines > 0 {
 		err := r.maybeWriteHiddenMarker()
@@ -123,7 +127,8 @@ func (r *Runtime) Finish() error {
 	return nil
 }
 
-func (r *Runtime) ColorReader(rd io.Reader) error {
+// ColorReader reads from rd and applies filter on the output.
+func (r *Runtime) ColorReader(rd io.Reader, callFinish bool) error {
 	br := textio.NewLineReader(rd, !*noCrSupport)
 
 	for {
@@ -141,13 +146,15 @@ func (r *Runtime) ColorReader(rd io.Reader) error {
 			return err
 		}
 	}
-	r.Finish()
+	if callFinish {
+		r.Finish()
+	}
 	return nil
 }
 
 func (r *Runtime) clearMatchesCache() {
 	for i := 0; i < len(r.matchesCache); i++ {
-		r.matchesCache[i] = MatchResult{}
+		r.matchesCache[i] = matchResult{}
 	}
 }
 
@@ -205,10 +212,11 @@ func (r *Runtime) maybeWriteHiddenMarker() error {
 		return nil
 	}
 	r.hiddenMarkWritten = true
-	_, err := r.wr.Write(HiddenMarker)
+	_, err := r.wr.Write(hiddenMarker)
 	return err
 }
 
+// ColorBytes applies filter on a given byte array and write to wr.
 func (r *Runtime) ColorBytes(b []byte) error {
 	var lineTerminator []byte
 	lastIndex := len(b) - 1
@@ -269,8 +277,8 @@ func (r *Runtime) ColorBytes(b []byte) error {
 	}
 
 	// Finally print the built line.
-	lastFg := EmptyBytes
-	lastBg := EmptyBytes
+	lastFg := emptyBytes
+	lastBg := emptyBytes
 	for i := 0; i < numBytes; i++ {
 		fg := r.colorsCache.getFg(i)
 		bg := r.colorsCache.getBg(i)
@@ -308,7 +316,7 @@ func (r *Runtime) ColorBytes(b []byte) error {
 	return nil
 }
 
-func (r *Runtime) findMatches(b []byte, defaultShow bool) (matches []MatchResult, show bool, after int, before int) {
+func (r *Runtime) findMatches(b []byte, defaultShow bool) (matches []matchResult, show bool, after int, before int) {
 	show = defaultShow
 
 	numMatches := 0
@@ -332,7 +340,7 @@ func (r *Runtime) findMatches(b []byte, defaultShow bool) (matches []MatchResult
 			r.state = rule.nextState
 			util.Debugf("Next state=%s\n", r.state)
 		}
-		r.matchesCache[numMatches] = MatchResult{rule: rule, positions: m}
+		r.matchesCache[numMatches] = matchResult{rule: rule, positions: m}
 		numMatches++
 		if rule.hide {
 			show = false

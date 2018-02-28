@@ -8,6 +8,7 @@ import (
 	"github.com/omakoto/hl2/src/hl/util"
 )
 
+// Highlighter defines a highliter specification.
 type Highlighter struct {
 	term term.Term
 
@@ -22,12 +23,14 @@ type Highlighter struct {
 
 var _ = hl.Context((*Highlighter)(nil))
 
+// NewHighlighter creates a new Highlighter instance with the auto-detected Term.
 func NewHighlighter() *Highlighter {
 	h := &Highlighter{}
 	h.term = term.NewDefaultTerm()
 	return h
 }
 
+// NewHighlighter creates a new Highlighter instance with a given Term.
 func NewHighlighterWithTerm(t term.Term) *Highlighter {
 	h := &Highlighter{}
 	h.term = t
@@ -81,7 +84,7 @@ func (h *Highlighter) LoadToml(ruleFile string) error {
 	return h.parseTomlFile(ruleFile)
 }
 
-func (h *Highlighter) AddRule(r *Rule) {
+func (h *Highlighter) addRule(r *Rule) {
 	h.rules = append(h.getRules(), r)
 }
 
@@ -100,7 +103,7 @@ func (h *Highlighter) AddSimpleRule(pattern, colorsStr string) error {
 	rule.after = h.defaultAfter
 	rule.before = h.defaultBefore
 
-	h.AddRule(rule)
+	h.addRule(rule)
 	return nil
 }
 
@@ -127,7 +130,7 @@ func (h *Highlighter) AddSimpleRangeRules(patternStart, colorsStart, patternEnd,
 	end.SetNextState(InitialState)
 	end.SetStates([]string{implicitState})
 	end.SetShow(true)
-	h.AddRule(end)
+	h.addRule(end)
 
 	// Add a rule to show all lines between start and end.
 	intermediate := newRule(h)
@@ -135,13 +138,21 @@ func (h *Highlighter) AddSimpleRangeRules(patternStart, colorsStart, patternEnd,
 	intermediate.matcher = m
 	intermediate.SetStates([]string{implicitState})
 	intermediate.SetShow(true)
-	h.AddRule(intermediate)
+	h.addRule(intermediate)
 
 	// Start rule.
 	start.before = h.defaultBefore
 	start.SetNextState(implicitState)
 	start.SetShow(true)
-	h.AddRule(start)
+	h.addRule(start)
 
 	return nil
+}
+
+func (h *Highlighter) MustAddSimpleRule(pattern, colorsStr string) {
+	util.Must(func() error { return h.AddSimpleRule(pattern, colorsStr) })
+}
+
+func (h *Highlighter) MustAddSimpleRangeRules(patternStart, colorsStart, patternEnd, colorsEnd string) {
+	util.Must(func() error { return h.AddSimpleRangeRules(patternStart, colorsStart, patternEnd, colorsEnd) })
 }

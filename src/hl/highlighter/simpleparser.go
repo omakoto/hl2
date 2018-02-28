@@ -12,7 +12,7 @@ func simpleToRule(context hl.Context, pattern, colorsStr string) (*Rule, error) 
 	rule.SetShow(true)
 
 	// Pattern
-	err := rule.SetMatcher(pattern)
+	err := rule.SetMatcherString(pattern)
 	if err != nil {
 		return nil, err
 	}
@@ -24,13 +24,13 @@ func simpleToRule(context hl.Context, pattern, colorsStr string) (*Rule, error) 
 	}
 
 	if len(vals) > 1 {
-		rule.SetMatchColors(vals[1])
+		rule.SetMatchColorsString(vals[1])
 		if err != nil {
 			return nil, err
 		}
 	}
 	if len(vals) > 2 {
-		rule.SetLineColors(vals[2])
+		rule.SetLineColorsString(vals[2])
 		if err != nil {
 			return nil, err
 		}

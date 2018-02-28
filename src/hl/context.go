@@ -12,8 +12,4 @@ type Context interface {
 
 	DefaultAfter() int
 	DefaultBefore() int
-
-	//AddRule(r *rules.Rule) error
-	//AddSimpleRule(pattern, colors string) error
-	//AddSimpleRangeRules(patternStart, colorsStart, patternEnd, colorsEnd string) error
 }

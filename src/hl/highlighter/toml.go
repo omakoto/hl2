@@ -62,14 +62,14 @@ func (h *Highlighter) addSingleRule(fr *FileRule) error {
 	or.SetStop(fr.Stop)
 
 	// Matcher
-	err := or.SetMatcher(fr.Pattern)
+	err := or.SetMatcherString(fr.Pattern)
 	if err != nil {
 		return err
 	}
 
 	// Prematcher
 	if fr.When != "" {
-		err := or.SetPreMatcher(fr.When)
+		err := or.SetPreMatcherString(fr.When)
 		if err != nil {
 			return err
 		}
@@ -80,27 +80,27 @@ func (h *Highlighter) addSingleRule(fr *FileRule) error {
 	or.SetStates(fr.States)
 
 	// Colors
-	err = or.SetMatchColors(fr.Colors)
+	err = or.SetMatchColorsString(fr.Colors)
 	if err != nil {
 		return err
 	}
 
 	// Line colors
-	err = or.SetLineColors(fr.LineColors)
+	err = or.SetLineColorsString(fr.LineColors)
 	if err != nil {
 		return err
 	}
 
 	// Pre/post lines
 	if fr.PreLine != "" {
-		err = or.SetPreLine(fr.PreLine, fr.PreLineColors)
+		err = or.SetPreLineString(fr.PreLine, fr.PreLineColors)
 		if err != nil {
 			return err
 		}
 	}
 
 	if fr.PostLine != "" {
-		err = or.SetPostLine(fr.PostLine, fr.PostLineColors)
+		err = or.SetPostLineString(fr.PostLine, fr.PostLineColors)
 		if err != nil {
 			return err
 		}
