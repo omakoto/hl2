@@ -2,13 +2,13 @@ package highlighter
 
 import (
 	"fmt"
-	"github.com/omakoto/hl2/src/hl"
 	"github.com/omakoto/hl2/src/hl/matcher"
 	"github.com/omakoto/hl2/src/hl/term"
 	"github.com/omakoto/hl2/src/hl/util"
 )
 
-// Highlighter defines a highliter specification.
+// Highlighter defines a highlighter specification.
+// Use NewHighlighter() or NewHighlighterWithTerm() to create a new instance.
 type Highlighter struct {
 	term term.Term
 
@@ -20,8 +20,6 @@ type Highlighter struct {
 
 	rules []*Rule
 }
-
-var _ = hl.Context((*Highlighter)(nil))
 
 // NewHighlighter creates a new Highlighter instance with the auto-detected Term.
 func NewHighlighter() *Highlighter {
@@ -47,6 +45,13 @@ func (h *Highlighter) IgnoreCase() bool {
 
 func (h *Highlighter) SetIgnoreCase(ignoreCase bool) {
 	h.ignoreCase = ignoreCase
+}
+
+func (h *Highlighter) MatcherFlags() matcher.Flags {
+	if h.ignoreCase {
+		return matcher.IgnoreCase
+	}
+	return matcher.NoFlags
 }
 
 func (h *Highlighter) DefaultHide() bool {
@@ -134,7 +139,7 @@ func (h *Highlighter) AddSimpleRangeRules(patternStart, colorsStart, patternEnd,
 
 	// Add a rule to show all lines between start and end.
 	intermediate := newRule(h)
-	m, _ := matcher.CompileWithContext(h, "^")
+	m, _ := matcher.Compile("^", h.MatcherFlags())
 	intermediate.matcher = m
 	intermediate.SetStates([]string{implicitState})
 	intermediate.SetShow(true)

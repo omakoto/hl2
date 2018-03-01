@@ -6,11 +6,6 @@ import (
 
 type Flags int
 
-const (
-	None       Flags = 0
-	IgnoreCase Flags = 1 << iota
-)
-
 type matcherGo struct {
 	srcPattern  string
 	realPattern string

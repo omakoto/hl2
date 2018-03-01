@@ -1,7 +1,6 @@
 package highlighter
 
 import (
-	"github.com/omakoto/hl2/src/hl"
 	"github.com/omakoto/hl2/src/hl/colors"
 	"github.com/omakoto/hl2/src/hl/matcher"
 	"github.com/omakoto/hl2/src/hl/term"
@@ -15,8 +14,8 @@ type decorativeLine struct {
 	Colors *term.RenderedColors
 }
 
-func newDecorativeLine(context hl.Context, marker string, colors *colors.Colors) *decorativeLine {
-	t := context.Term()
+func newDecorativeLine(h *Highlighter, marker string, colors *colors.Colors) *decorativeLine {
+	t := h.Term()
 	c := term.NewRenderedColors(t, colors)
 	return &decorativeLine{
 		Marker: []byte(marker),
@@ -25,7 +24,7 @@ func newDecorativeLine(context hl.Context, marker string, colors *colors.Colors)
 }
 
 type Rule struct {
-	context hl.Context
+	highlighter *Highlighter
 
 	matcher    matcher.Matcher
 	preMatcher matcher.Matcher
@@ -47,8 +46,8 @@ type Rule struct {
 	nextState string
 }
 
-func newRule(context hl.Context) *Rule {
-	return &Rule{context: context}
+func newRule(h *Highlighter) *Rule {
+	return &Rule{highlighter: h}
 }
 
 func (r *Rule) isForState(state string) bool {
@@ -64,7 +63,7 @@ func (r *Rule) isForState(state string) bool {
 }
 
 func (r *Rule) SetMatcherString(pattern string) error {
-	m, err := matcher.CompileWithContext(r.context, pattern)
+	m, err := matcher.Compile(pattern, r.highlighter.MatcherFlags())
 	if err != nil {
 		return err
 	}
@@ -73,7 +72,7 @@ func (r *Rule) SetMatcherString(pattern string) error {
 }
 
 func (r *Rule) SetPreMatcherString(pattern string) error {
-	m, err := matcher.CompileWithContext(r.context, pattern)
+	m, err := matcher.Compile(pattern, r.highlighter.MatcherFlags())
 	if err != nil {
 		return err
 	}
@@ -114,7 +113,7 @@ func (r *Rule) SetMatchColorsString(colorsStr string) error {
 	if err != nil {
 		return err
 	}
-	r.matchColors = term.NewRenderedColors(r.context.Term(), c)
+	r.matchColors = term.NewRenderedColors(r.highlighter.Term(), c)
 	return nil
 }
 
@@ -123,7 +122,7 @@ func (r *Rule) SetLineColorsString(colorsStr string) error {
 	if err != nil {
 		return err
 	}
-	r.lineColors = term.NewRenderedColors(r.context.Term(), c)
+	r.lineColors = term.NewRenderedColors(r.highlighter.Term(), c)
 	return nil
 }
 
@@ -132,7 +131,7 @@ func (r *Rule) SetPreLineString(marker, colorsStr string) error {
 	if err != nil {
 		return err
 	}
-	r.preLine = newDecorativeLine(r.context, marker, c)
+	r.preLine = newDecorativeLine(r.highlighter, marker, c)
 	return nil
 }
 
@@ -141,7 +140,7 @@ func (r *Rule) SetPostLineString(marker, colorsStr string) error {
 	if err != nil {
 		return err
 	}
-	r.postLine = newDecorativeLine(r.context, marker, c)
+	r.postLine = newDecorativeLine(r.highlighter, marker, c)
 	return nil
 }
 

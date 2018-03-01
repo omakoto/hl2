@@ -2,12 +2,11 @@ package highlighter
 
 import (
 	"errors"
-	"github.com/omakoto/hl2/src/hl"
 	"strings"
 )
 
-func simpleToRule(context hl.Context, pattern, colorsStr string) (*Rule, error) {
-	rule := newRule(context)
+func simpleToRule(h *Highlighter, pattern, colorsStr string) (*Rule, error) {
+	rule := newRule(h)
 
 	rule.SetShow(true)
 

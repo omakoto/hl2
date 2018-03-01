@@ -76,7 +76,7 @@ func (c *colorsCache) getBg(index int) []byte {
 	return nil
 }
 
-// Runtime defines a Highlighter execution context.
+// Runtime defines a Highlighter execution highlighter.
 // Multiple Runtime's can be created for the same Highlighter instance.
 type Runtime struct {
 	h *Highlighter

@@ -47,7 +47,7 @@ func NewIndexColor(index uint8) Color {
 }
 
 func color6to256(v uint8) uint8 {
-	if (v > 5) {
+	if v > 5 {
 		panic(fmt.Sprintf("Color out of range: %d > 5", v))
 	}
 	return uint8(int(v) * 255 / 5)

@@ -1,9 +1,9 @@
 package term
 
 import (
-	"testing"
-	"os"
 	"github.com/stretchr/testify/assert"
+	"os"
+	"testing"
 )
 
 func TestNewDefaultTerm(t *testing.T) {

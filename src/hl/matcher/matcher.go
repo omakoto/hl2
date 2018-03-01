@@ -1,7 +1,8 @@
 package matcher
 
-import (
-	"github.com/omakoto/hl2/src/hl"
+const (
+	NoFlags    Flags = 0
+	IgnoreCase Flags = 1 << iota
 )
 
 type Matcher interface {
@@ -10,14 +11,6 @@ type Matcher interface {
 }
 
 var NoPcre = false
-
-func CompileWithContext(context hl.Context, pattern string) (Matcher, error) {
-	flags := None
-	if context.IgnoreCase() {
-		flags |= IgnoreCase
-	}
-	return Compile(pattern, flags)
-}
 
 func Compile(pattern string, flags Flags) (Matcher, error) {
 	if NoPcre {
