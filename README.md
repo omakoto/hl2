@@ -5,5 +5,5 @@ Highlighter: versatile coloring filter
 
 ```sh
 sudo apt-get install libpcre++-dev
-go install -u github.com/omakoto/hl
+go install github.com/omakoto/hl2/src/cmd/hl
 ```
