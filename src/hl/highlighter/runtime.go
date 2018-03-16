@@ -208,6 +208,9 @@ func (r *Runtime) hideLine(bytes []byte) error {
 }
 
 func (r *Runtime) maybeWriteHiddenMarker() error {
+	if r.h.noSkipMarker {
+		return nil
+	}
 	if r.hiddenMarkWritten {
 		return nil
 	}

@@ -27,6 +27,7 @@ var (
 	context           = getopt.IntLong("context", 'C', 0, "Specify number of context lines.")
 	ignoreCase        = getopt.BoolLong("ignore-case", 'i', "Perform case insensitive match.")
 	defaultHide       = getopt.BoolLong("hide", 'n', "Hide all lines by default.")
+	noSkipMarker      = getopt.BoolLong("no-skip-marker", 'S', "Suppress skip markers.")
 	execute           = getopt.BoolLong("command", 'c', "TODO Doc") // "Treat arguments as command line instead of input filese, execute it and apply to output.\nOptionally specify command line terminator.")
 	eatStderr         = getopt.BoolLong("stderr", '2', "Use with -c; process stderr from command too.")
 	width             = getopt.IntLong("width", 'w', term.GetTermWidth(), "Set terminal width, used for pre and post lines.")
@@ -120,6 +121,7 @@ func main() {
 	h.SetDefaultHide(*defaultHide)
 	h.SetDefaultBefore(*before)
 	h.SetDefaultAfter(*after)
+	h.SetNoSkipMarker(*noSkipMarker)
 	util.Dump("Highlighter (start): ", h)
 
 	// Process -c and -f, and also extract simple (inline) rules.

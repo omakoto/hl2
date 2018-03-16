@@ -12,8 +12,9 @@ import (
 type Highlighter struct {
 	term term.Term
 
-	ignoreCase  bool
-	defaultHide bool
+	ignoreCase   bool
+	defaultHide  bool
+	noSkipMarker bool
 
 	defaultBefore int
 	defaultAfter  int
@@ -60,6 +61,14 @@ func (h *Highlighter) DefaultHide() bool {
 
 func (h *Highlighter) SetDefaultHide(defaultHide bool) {
 	h.defaultHide = defaultHide
+}
+
+func (h *Highlighter) NoSkipMarker() bool {
+	return h.noSkipMarker
+}
+
+func (h *Highlighter) SetNoSkipMarker(noSkipMarker bool) {
+	h.noSkipMarker = noSkipMarker
 }
 
 func (h *Highlighter) DefaultAfter() int {
