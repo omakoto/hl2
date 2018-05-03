@@ -12,8 +12,6 @@ import (
 	"os"
 	"os/exec"
 	"runtime/pprof"
-
-	"C"
 )
 
 const (
