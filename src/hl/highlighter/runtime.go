@@ -2,8 +2,8 @@ package highlighter
 
 import (
 	"bytes"
+	"github.com/omakoto/go-common/src/textio"
 	"github.com/omakoto/hl2/src/hl/term"
-	"github.com/omakoto/hl2/src/hl/textio"
 	"github.com/omakoto/hl2/src/hl/util"
 	"github.com/pborman/getopt/v2"
 	"io"
