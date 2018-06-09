@@ -5,7 +5,7 @@ here=$(dirname "$0")
 filter="$*"
 : ${filter:='*'}
 
-if [[ "$WITH_DEBUGGER" == 1 ]] ; then
+if [[ "$DEBUG" == 1 ]] ; then
     debug=--debug
 fi
 
