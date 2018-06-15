@@ -2,8 +2,12 @@ language: go
 sudo: false
 go:
 - "1.10.x"
-before_install:
-  - sudo apt-get install libpcre++-dev
+addons:
+  apt:
+    packages:
+      - libpcre++-dev
+#before_install:
+#  - sudo apt-get install libpcre++-dev
 before_script:
   - go vet ./...
 script:
