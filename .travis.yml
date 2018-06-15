@@ -1,11 +1,11 @@
+sudo: true
+dist: trusty
 language: go
-sudo: false
 go:
 - "1.10.x"
-addons:
-  apt:
-    packages:
-      - libpcre++-dev
+install:
+  - sudo apt-get --yes install snapd
+  - sudo snap install libpcre++-dev
 #before_install:
 #  - sudo apt-get install libpcre++-dev
 before_script:
