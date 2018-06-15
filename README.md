@@ -3,7 +3,7 @@ Highlighter: versatile coloring filter
 
 ## Installation
 
-```sh
+```bash
 sudo apt-get install libpcre++-dev
-go install github.com/omakoto/hl2/src/cmd/hl
+go get -u github.com/omakoto/hl2/src/cmd/hl
 ```
