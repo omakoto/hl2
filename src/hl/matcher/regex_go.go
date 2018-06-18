@@ -19,7 +19,7 @@ func (r *matcherGo) String() string {
 	return r.srcPattern
 }
 
-func CompileGo(pattern string, flags Flags) (*matcherGo, error) {
+func CompileGo(pattern string, flags Flags) (Matcher, error) {
 	negate := false
 
 	realPattern := pattern

@@ -18,7 +18,7 @@ func (r *matcherPcre) String() string {
 	return r.srcPattern
 }
 
-func CompilePcre(pattern string, flags Flags) (*matcherPcre, error) {
+func CompilePcre(pattern string, flags Flags) (Matcher, error) {
 	negate := false
 
 	realPattern := pattern
