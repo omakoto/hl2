@@ -1,15 +1,13 @@
-sudo: true
-dist: trusty
-language: go
-go:
-- "1.10.x"
-install:
-  - sudo apt-get --yes install snapd
-  - sudo snap install libpcre++-dev
-#before_install:
-#  - sudo apt-get install libpcre++-dev
-before_script:
-  - go vet ./...
+sudo: required
+
+services:
+  - docker
+
+before_install:
+ - docker/build-docker.sh
+
 script:
- - "gofmt -s -d $(find . -type f -name '*.go') |& perl -pe 'END{exit($. > 0 ? 1 : 0)}'"
- - go test -v ./...
+ - docker run -it --rm -t hl2_docker /bin/bash -c 'go/src/github.com/omakoto/hl2/scripts/presubmit.sh'
+
+
+
