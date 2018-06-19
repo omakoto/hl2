@@ -4,10 +4,7 @@ services:
   - docker
 
 before_install:
- - docker/build-docker.sh
+ - docker/build-docker.sh #presubmit
 
 script:
- - docker run -it --rm -t hl2_docker /bin/bash -c 'go/src/github.com/omakoto/hl2/scripts/presubmit.sh'
-
-
-
+ - docker run -it --rm -t hl2_docker /bin/bash -c 'go/src/github.com/omakoto/hl2/scripts/presubmit.sh' #presubmit
