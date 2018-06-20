@@ -1,3 +1,4 @@
+[![Build Status](https://travis-ci.org/omakoto/hl2.svg?branch=master)](https://travis-ci.org/omakoto/hl2)
 # hl
 Highlighter: versatile coloring filter
 
