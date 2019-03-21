@@ -15,7 +15,7 @@ LOOP:
 	for {
 		i++
 		if len(*pattern) <= i {
-			return errors.New("Unterminated prefix in '" + *pattern + "'")
+			return errors.New("unterminated prefix in '" + *pattern + "'")
 		}
 		switch (*pattern)[i] {
 		case '}':
@@ -25,7 +25,7 @@ LOOP:
 		case '#':
 			removeSpaces = true
 		default:
-			return errors.New("Unknown prefix in '" + *pattern + "'")
+			return errors.New("unknown prefix in '" + *pattern + "'")
 		}
 	}
 	i++
@@ -52,7 +52,7 @@ func removeExtras(s string) (string, error) {
 		if r == '\\' {
 			i++
 			if i >= len(s) {
-				return "", errors.New("Pattern termminated with escape")
+				return "", errors.New("pattern termminated with escape")
 			}
 			if s[i] != ' ' {
 				buf.WriteByte(r)
