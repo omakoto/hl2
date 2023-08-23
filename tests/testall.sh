@@ -9,7 +9,7 @@ if [[ "$DEBUG" == 1 ]] ; then
     debug=--debug
 fi
 
-export options="--read-buffer-size 4"
+export options=""
 export debug
 
 bin=../bin/hl

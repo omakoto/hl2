@@ -1,6 +1,6 @@
 # Reference: https://docs.docker.com/engine/reference/builder/
 
-ARG gover=1.13
+ARG gover=1.20
 
 FROM debian:latest
 FROM golang:$gover
@@ -16,10 +16,10 @@ ENV GOPATH=$home/go/
 ARG copy_target=$GOPATH/src/$go_target
 
 RUN apt-get update
-RUN apt-get install -y git-core zsh vim less psmisc sudo procps libpcre++-dev man-db
+RUN apt-get install -y git-core zsh vim less psmisc sudo procps libpcre3-dev man-db
+RUN go install honnef.co/go/tools/cmd/staticcheck@latest
 
-RUN go get -v -t golang.org/x/lint/golint honnef.co/go/tools/cmd/... $go_target/src/cmd/hl github.com/stretchr/testify/assert
-RUN go install $go_target/src/cmd/hl
+RUN go install ${go_target}src/cmd/hl@latest
 
 WORKDIR $home
 ENV HOME=$home

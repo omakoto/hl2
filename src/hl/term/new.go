@@ -1,9 +1,10 @@
 package term
 
 import (
-	"golang.org/x/crypto/ssh/terminal"
 	"os"
 	"strings"
+
+	"golang.org/x/term"
 )
 
 const (
@@ -15,7 +16,7 @@ var (
 )
 
 func GetTermWidth() int {
-	width, _, err := terminal.GetSize(1)
+	width, _, err := term.GetSize(1)
 	if err != nil {
 		return DefaultTermWidth
 	}
