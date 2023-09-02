@@ -8,7 +8,7 @@ require (
 	github.com/davecgh/go-spew v1.1.1
 	github.com/mattn/go-isatty v0.0.19
 	github.com/omakoto/go-common v0.0.0-20210223020755-bd49cd9ce44e
-	github.com/pborman/getopt v0.0.0-20190409184431-ee0cd42419d3
+	github.com/pborman/getopt/v2 v2.1.0
 	github.com/stretchr/testify v1.4.0
 	golang.org/x/term v0.11.0
 )
