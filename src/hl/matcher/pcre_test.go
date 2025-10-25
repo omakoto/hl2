@@ -1,8 +1,9 @@
 package matcher
 
 import (
-	"github.com/d4l3k/go-pcre"
 	"testing"
+
+	pcre "github.com/Jemmic/go-pcre2"
 )
 
 func TestPcre(t *testing.T) {
@@ -29,7 +30,7 @@ func TestPcre(t *testing.T) {
 }
 
 func TestPcreUtf8(t *testing.T) {
-	re, err := pcre.Compile(`[③-⑥]+`, pcre.UTF8|pcre.NO_UTF8_CHECK)
+	re, err := pcre.Compile(`[③-⑥]+`, pcre.UTF|pcre.NO_UTF_CHECK)
 	if err != nil {
 		t.Errorf("Compile returned %v", err)
 	}

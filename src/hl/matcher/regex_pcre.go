@@ -2,7 +2,8 @@ package matcher
 
 import (
 	"fmt"
-	"github.com/d4l3k/go-pcre"
+
+	pcre "github.com/Jemmic/go-pcre2"
 )
 
 type matcherPcre struct {
@@ -26,16 +27,16 @@ func CompilePcre(pattern string, flags Flags) (Matcher, error) {
 	if err != nil {
 		return nil, err
 	}
-	pcreFlags := pcre.UTF8 | pcre.NO_UTF8_CHECK
+	pcreFlags := pcre.UTF | pcre.NO_UTF_CHECK
 	if (flags & IgnoreCase) != 0 {
 		pcreFlags |= pcre.CASELESS
 	}
-	pat, err := pcre.Compile(realPattern, pcreFlags)
+	pat, err := pcre.Compile(realPattern, (uint32)(pcreFlags))
 	if err != nil {
 		return nil, err
 	}
 
-	return &matcherPcre{srcPattern: pattern, realPattern: realPattern, negate: negate, pattern: &pat}, nil
+	return &matcherPcre{srcPattern: pattern, realPattern: realPattern, negate: negate, pattern: pat}, nil
 }
 
 func (r *matcherPcre) Matches(target []byte) [][]int {
@@ -57,7 +58,7 @@ func (r *matcherPcre) Matches(target []byte) [][]int {
 		//util.Debugf("Start=%d\n", start)
 		//util.Debugf("  Target=\"%s\"\n", string(target[start:]))
 		result := m.Exec(target[start:], 0)
-		if result == pcre.ERROR_NOMATCH || result == pcre.ERROR_BADUTF8 {
+		if result == pcre.ERROR_NOMATCH {
 			break
 		}
 		if result < 0 {
