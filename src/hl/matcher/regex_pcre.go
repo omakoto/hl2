@@ -1,8 +1,6 @@
 package matcher
 
 import (
-	"fmt"
-
 	pcre "github.com/Jemmic/go-pcre2"
 )
 
@@ -62,7 +60,8 @@ func (r *matcherPcre) Matches(target []byte) [][]int {
 			break
 		}
 		if result < 0 {
-			panic(fmt.Sprintf("pcre_exec returned %d for pattern \"%s\" (len %db), target \"%s\", index %d", result, r.realPattern, len([]byte(r.realPattern)), string(target), start))
+			//			fmt.Fprintf(os.Stderr, "hl2: [WARNING] pcre_exec returned %d for pattern \"%s\" (len %db), target \"%s\", index %d", result, r.realPattern, len([]byte(r.realPattern)), string(target), start)
+			return nil
 		}
 		// matchStart := m.GroupIndices(0)[0]
 		matchEnd := m.GroupIndices(0)[1] + start
