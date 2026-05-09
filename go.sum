@@ -1,9 +1,9 @@
 github.com/BurntSushi/toml v0.3.1 h1:WXkYYl6Yr3qBf1K79EBnL4mak0OimBfB0XUf9Vl28OQ=
 github.com/BurntSushi/toml v0.3.1/go.mod h1:xHWCNGjB5oqiDr8zfno3MHue2Ht5sIBksp03qcyfWMU=
-github.com/Jemmic/go-pcre2 v0.0.0-20190111114109-bd52ad5f7098 h1:ZwFIi+5jGJWVrB2V4NvrEhIUy6uDkfnTtBsgj3HAImI=
-github.com/Jemmic/go-pcre2 v0.0.0-20190111114109-bd52ad5f7098/go.mod h1:c+8WT1L7lfohb4xMaa3yAV7nlYNepqc2ZV09/CU8R/U=
 github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c=
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
+github.com/dlclark/regexp2 v1.12.0 h1:0j4c5qQmnC6XOWNjP3PIXURXN2gWx76rd3KvgdPkCz8=
+github.com/dlclark/regexp2 v1.12.0/go.mod h1:DHkYz0B9wPfa6wondMfaivmHpzrQ3v9q8cnmRbL6yW8=
 github.com/mattn/go-isatty v0.0.19 h1:JITubQf0MOLdlGRuRq+jtsDlekdYPia9ZFsB8h/APPA=
 github.com/mattn/go-isatty v0.0.19/go.mod h1:W+V8PltTTMOvKvAeJH7IuucS94S2C6jfK/D7dTCTo3Y=
 github.com/omakoto/go-common v0.0.0-20230902054104-3c406b670d93 h1:sq3ahA93JM8LRc4JaL5tSkX28VsN+wEvUvsbvcGfsEI=

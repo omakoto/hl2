@@ -1,14 +1,14 @@
 package matcher
 
 import (
-	pcre "github.com/Jemmic/go-pcre2"
+	"github.com/dlclark/regexp2"
 )
 
 type matcherPcre struct {
 	srcPattern  string
 	realPattern string
 	negate      bool
-	pattern     *pcre.Regexp
+	pattern     *regexp2.Regexp
 }
 
 var _ = Matcher((*matcherPcre)(nil))
@@ -25,11 +25,11 @@ func CompilePcre(pattern string, flags Flags) (Matcher, error) {
 	if err != nil {
 		return nil, err
 	}
-	pcreFlags := pcre.UTF | pcre.NO_UTF_CHECK
+	var re2Flags regexp2.RegexOptions
 	if (flags & IgnoreCase) != 0 {
-		pcreFlags |= pcre.CASELESS
+		re2Flags |= regexp2.IgnoreCase
 	}
-	pat, err := pcre.Compile(realPattern, (uint32)(pcreFlags))
+	pat, err := regexp2.Compile(realPattern, re2Flags)
 	if err != nil {
 		return nil, err
 	}
@@ -38,58 +38,50 @@ func CompilePcre(pattern string, flags Flags) (Matcher, error) {
 }
 
 func (r *matcherPcre) Matches(target []byte) [][]int {
+	s := string(target)
+
+	// regexp2 returns rune positions; build mapping to byte offsets
+	runeToBytePos := make([]int, 0, len(s))
+	for bytePos := range s {
+		runeToBytePos = append(runeToBytePos, bytePos)
+	}
+	runeToBytePos = append(runeToBytePos, len(target))
+
+	byteOffset := func(runeIdx int) int {
+		if runeIdx >= 0 && runeIdx < len(runeToBytePos) {
+			return runeToBytePos[runeIdx]
+		}
+		return len(target)
+	}
+
 	if r.negate {
-		if !r.pattern.Matcher(target, 0).Matches() {
+		m, _ := r.pattern.FindStringMatch(s)
+		if m == nil {
 			return [][]int{{0, len(target)}}
 		}
 		return nil
 	}
-	m := r.pattern.NewMatcher()
 
 	res := make([][]int, 0)
-
-	start := 0
-	for {
-		if start > len(target) {
-			break
-		}
-		//util.Debugf("Start=%d\n", start)
-		//util.Debugf("  Target=\"%s\"\n", string(target[start:]))
-		result := m.Exec(target[start:], 0)
-		if result == pcre.ERROR_NOMATCH {
-			break
-		}
-		if result < 0 {
-			//			fmt.Fprintf(os.Stderr, "hl2: [WARNING] pcre_exec returned %d for pattern \"%s\" (len %db), target \"%s\", index %d", result, r.realPattern, len([]byte(r.realPattern)), string(target), start)
-			return nil
-		}
-		// matchStart := m.GroupIndices(0)[0]
-		matchEnd := m.GroupIndices(0)[1] + start
-		//util.Debugf("  Match=%d, %d\n", matchStart, matchEnd)
-
+	for m, _ := r.pattern.FindStringMatch(s); m != nil; m, _ = r.pattern.FindNextMatch(m) {
 		groups := m.Groups()
-		if groups == 0 {
-			indexes := make([]int, 2)
-			indexes[0] = m.GroupIndices(0)[0] + start
-			indexes[1] = m.GroupIndices(0)[1] + start
-			res = append(res, indexes)
+		if len(groups) <= 1 {
+			res = append(res, []int{
+				byteOffset(groups[0].Index),
+				byteOffset(groups[0].Index + groups[0].Length),
+			})
 		} else {
-			for j := 1; j <= groups; j++ {
-				gi := m.GroupIndices(j)
-				if gi != nil {
-					indexes := make([]int, 2)
-					indexes[0] = gi[0] + start
-					indexes[1] = gi[1] + start
-					res = append(res, indexes)
+			for _, g := range groups[1:] {
+				if len(g.Captures) > 0 {
+					res = append(res, []int{
+						byteOffset(g.Index),
+						byteOffset(g.Index + g.Length),
+					})
 				}
 			}
 		}
-
-		if matchEnd == start {
-			matchEnd++
-		}
-		start = matchEnd
 	}
+
 	if len(res) == 0 {
 		return nil
 	}

@@ -3,50 +3,55 @@ package matcher
 import (
 	"testing"
 
-	pcre "github.com/Jemmic/go-pcre2"
+	"github.com/dlclark/regexp2"
 )
 
 func TestPcre(t *testing.T) {
-	re, err := pcre.Compile(`ab(\d+)`, 0)
+	re, err := regexp2.Compile(`ab(\d+)`, 0)
 	if err != nil {
 		t.Errorf("Compile returned %v", err)
+		return
 	}
-	m := re.NewMatcher()
 
-	res := m.Exec([]byte("xab123XYZab456"), 0)
-	if res < 0 {
-		t.Errorf("Exec returned %v", res)
+	m, err := re.FindStringMatch("xab123XYZab456")
+	if err != nil {
+		t.Errorf("FindStringMatch returned error: %v", err)
+		return
 	}
+	if m == nil {
+		t.Errorf("FindStringMatch returned nil")
+		return
+	}
+
 	groups := m.Groups()
-	if groups != 1 {
-		t.Errorf("Groups returned %v", groups)
+	if len(groups) != 2 { // groups[0] = full match, groups[1] = capture group
+		t.Errorf("expected 2 groups, got %v", len(groups))
 	}
-	first := string(m.Group(0))
-	if first != "ab123" {
-		t.Errorf("Group(0): %v", first)
+
+	if m.String() != "ab123" {
+		t.Errorf("expected match 'ab123', got %v", m.String())
 	}
-	//t.Errorf("GroupIndices(0): %v", m.GroupIndices(0)) // GroupIndices(0): [1 6]
-	//t.Errorf("GroupIndices(1): %v", m.GroupIndices(1)) // GroupIndices(1): [3 6]
 }
 
 func TestPcreUtf8(t *testing.T) {
-	re, err := pcre.Compile(`[③-⑥]+`, pcre.UTF|pcre.NO_UTF_CHECK)
+	re, err := regexp2.Compile(`[③-⑥]+`, 0)
 	if err != nil {
 		t.Errorf("Compile returned %v", err)
+		return
 	}
-	m := re.NewMatcher()
 
-	res := m.Exec([]byte("①②③④⑤⑥⑦⑧⑨⑩"), 0)
-	if res < 0 {
-		t.Errorf("Exec returned %v", res)
+	m, err := re.FindStringMatch("①②③④⑤⑥⑦⑧⑨⑩")
+	if err != nil {
+		t.Errorf("FindStringMatch returned error: %v", err)
+		return
 	}
+	if m == nil {
+		t.Errorf("FindStringMatch returned nil")
+		return
+	}
+
 	groups := m.Groups()
-	if groups != 0 {
-		t.Errorf("Groups returned %v", groups)
+	if len(groups) != 1 { // only groups[0] (full match), no capture groups
+		t.Errorf("expected 1 group, got %v", len(groups))
 	}
-	//first := string(m.Group(0))
-	//if first != "ab123" {
-	//	t.Errorf("Group(0): %v", first)
-	//}
-	//t.Errorf("GroupIndices(0): %v", m.GroupIndices(0)) // GroupIndices(0): [6 18]
 }
