@@ -2,6 +2,7 @@ package highlighter
 
 import (
 	"errors"
+	"fmt"
 	"github.com/BurntSushi/toml"
 	"github.com/omakoto/hl2/src/hl/util"
 )
@@ -30,7 +31,8 @@ type FileRule struct {
 }
 
 type RuleFile struct {
-	Rules []FileRule `toml:"rule"`
+	Rules  []FileRule `toml:"rule"`
+	Ignore string     `toml:"IGNORE"` // absorbed from self-executing TOML script headers
 }
 
 func (h *Highlighter) parseTomlFile(filename string) error {
@@ -38,9 +40,12 @@ func (h *Highlighter) parseTomlFile(filename string) error {
 	var r RuleFile
 	util.Debugf("Reading rules from '%s'...\n", filename)
 
-	_, err := toml.DecodeFile(filename, &r)
+	md, err := toml.DecodeFile(filename, &r)
 	if err != nil {
 		return err
+	}
+	if keys := md.Undecoded(); len(keys) > 0 {
+		return fmt.Errorf("unknown field(s) in %s: %v", filename, keys)
 	}
 
 	util.Dump("Rules=", r)

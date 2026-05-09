@@ -1,0 +1,39 @@
+#!/bin/sh
+# Test that unrecognized fields in a TOML rule file are rejected with an error.
+
+here="$(dirname "$0")"
+bin="$here/../bin/hl"
+
+good=$(mktemp)
+bad=$(mktemp)
+trap "rm -f '$good' '$bad'" EXIT
+
+# Valid rule file - must succeed
+cat > "$good" << 'EOF'
+[[rule]]
+pattern = 'test'
+color = 'red'
+EOF
+
+# Rule file with an unrecognized field (typo: "colour" instead of "color")
+cat > "$bad" << 'EOF'
+[[rule]]
+pattern = 'test'
+colour = 'red'
+EOF
+
+echo test | "$bin" --width 120 -r "$good" > /dev/null 2>&1
+good_rc=$?
+
+err=$(echo test | "$bin" --width 120 -r "$bad" 2>&1 > /dev/null)
+bad_rc=$?
+
+if [ $good_rc -ne 0 ]; then
+    echo "FAIL: valid rule file exited $good_rc"
+elif [ $bad_rc -eq 0 ]; then
+    echo "FAIL: unknown field was not rejected"
+elif ! echo "$err" | grep -q "colour"; then
+    echo "FAIL: error message did not name the bad field (got: $err)"
+else
+    echo "ok"
+fi
