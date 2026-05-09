@@ -1,0 +1,44 @@
+#!/bin/sh
+IGNORE=''''
+exec "$(dirname "$0")"/../bin/hl $debug $options --width 120 -r "$0"
+'''
+
+# 24-bit (RRGGBB) colors. 204080 → R=0x20=32  G=0x40=64  B=0x80=128
+# 103050          → R=0x10=16  G=0x30=48  B=0x50=80
+# All three components differ, so any R/G/B ordering bug produces wrong ANSI values.
+
+[[rule]]
+pattern = 'fg24'
+color = '204080'
+
+[[rule]]
+pattern = 'bg24'
+color = '/204080'
+
+[[rule]]
+pattern = 'both24'
+color = '204080/103050'
+
+[[rule]]
+pattern = 'line24'
+line_color = '204080/103050'
+
+# 216-color (three digits 0-5). 321 → R=3(153)  G=2(102)  B=1(51)
+#                               123 → R=1(51)   G=2(102)  B=3(153)
+# Components differ, and 321/123 are mirror-ordered so swaps are obvious.
+
+[[rule]]
+pattern = 'fg216'
+color = '321'
+
+[[rule]]
+pattern = 'bg216'
+color = '/321'
+
+[[rule]]
+pattern = 'both216'
+color = '321/123'
+
+[[rule]]
+pattern = 'line216'
+line_color = '321/123'

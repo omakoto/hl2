@@ -1,5 +1,3 @@
-- Test bit color / index color too.
-
-- Rad lines ending with with CRs too.
+- Read lines ending with with CRs too.
 
 - Fail with unknown TOML fields.

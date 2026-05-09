@@ -1,0 +1,24 @@
+#!/bin/sh
+IGNORE=''''
+exec "$(dirname "$0")"/../bin/hl $debug $options --width 120 -r "$0"
+'''
+
+# Positive lookahead (?=...): match word chars only when followed by ":"
+[[rule]]
+pattern = '\w+(?=:)'
+color = 'bred'
+
+# Negative lookahead (?!...): match "foo" only when NOT followed by "bar"
+[[rule]]
+pattern = '\bfoo(?!bar)'
+color = 'bblue'
+
+# Positive lookbehind (?<=...): match word chars only when preceded by "@"
+[[rule]]
+pattern = '(?<=@)\w+'
+color = 'bgreen'
+
+# Negative lookbehind (?<!...): match digits only when NOT preceded by "$"
+[[rule]]
+pattern = '(?<!\$)\b\d+'
+color = 'byellow'
