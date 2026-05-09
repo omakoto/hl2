@@ -1,0 +1,5 @@
+error: something bad happened
+[0m[1;31mnormal: all is good[0m
+[0m[1;31mwarning: watch out[0m
+error: another failure
+[0m[1;31mlooks fine here[0m

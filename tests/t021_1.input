@@ -1,0 +1,5 @@
+error: something bad happened
+normal: all is good
+warning: watch out
+error: another failure
+looks fine here

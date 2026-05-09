@@ -1,0 +1,10 @@
+#!/bin/sh
+IGNORE=''''
+exec "$(dirname "$0")"/../bin/hl $debug $options --width 120 -r "$0"
+'''
+
+# {!#} combined: negate + strip unescaped spaces
+# Pattern "h e l l o" strips to "hello"; lines NOT containing "hello" are highlighted
+[[rule]]
+pattern = '''{!#}h e l l o'''
+line_color = 'bred'

@@ -1,3 +1,3 @@
 #!/bin/bash
 
-cd scripts && ./presubmit.sh
+cd "$(dirname "$0")"/scripts && ./presubmit.sh

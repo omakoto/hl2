@@ -1,0 +1,10 @@
+#!/bin/sh
+IGNORE=''''
+exec "$(dirname "$0")"/../bin/hl $debug $options --width 120 -r "$0"
+'''
+
+# {#} with escaped space: "foo\ bar" strips unescaped spaces but preserves "\ " as literal space
+# So the pattern matches "foo bar" (with space) but not "foobar" (without space)
+[[rule]]
+pattern = '''{#}foo\ bar'''
+color = 'bred'
