@@ -1,0 +1,25 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(go get *)",
+      "Bash(go mod *)",
+      "Bash(bash *)",
+      "Bash(grep -E \"^\\(==|.*\\\\$\\)\")",
+      "Bash(xxd)",
+      "Bash(bin/hl '\\\\d+')",
+      "Bash(bin/hl -N '\\\\d+')",
+      "Bash(printf 'key: value\\\\nfoobar foobaz\\\\nhello @user end\\\\ncost $100 or 200\\\\n')",
+      "Bash(bin/hl --width 120 '\\\\w+\\(?=:\\)' @bred '\\\\bfoo\\(?!bar\\)' @bblue '\\(?<=@\\)\\\\w+' @bgreen '\\(?<!\\\\$\\)\\\\b\\\\d+' @byellow)",
+      "Bash(bin/hl --width 120 'fg24' @204080 'bg24' @/204080 'both24' @204080/103050 'fg216' @321 'bg216' @/321 'both216' @321/123)",
+      "Bash(unset COLORTERM)",
+      "Bash(bin/hl -r /dev/stdin)",
+      "Bash(echo \"exit: $?\")",
+      "Bash(bin/hl -r /tmp/bad.toml)",
+      "Bash(go build *)",
+      "Bash(bin/hl -r tests/t001.rules)",
+      "Bash(bin/hl --width 120 'frame1' @/bred)",
+      "Bash(bin/hl --width 120 'frame1' @red)",
+      "Bash(bin/hl --width 120 -r /dev/stdin)"
+    ]
+  }
+}
