@@ -1,6 +1,6 @@
 #!/bin/sh
 IGNORE=''''
-exec "$(dirname "$0")"/../bin/hl $debug $options --width 120 -r "$0"
+exec "$(dirname "$0")"/../bin/hl $debug $options -r "$0"
 '''
 
 # 24-bit (RRGGBB) colors. 204080 → R=0x20=32  G=0x40=64  B=0x80=128

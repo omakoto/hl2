@@ -1,0 +1,10 @@
+#!/bin/sh
+IGNORE=''''
+exec "$(dirname "$0")"/../bin/hl $debug $options -w 30 -r "$0"
+'''
+
+# -w 30 (short form of --width): pre_line must be exactly 30 characters wide
+[[rule]]
+pattern = 'marker'
+pre_line = '='
+pre_line_color = 'red'

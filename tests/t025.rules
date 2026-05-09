@@ -1,6 +1,6 @@
 #!/bin/sh
 IGNORE=''''
-exec "$(dirname "$0")"/../bin/hl $debug $options -N --width 120 -r "$0"
+exec "$(dirname "$0")"/../bin/hl $debug $options -N -r "$0"
 '''
 
 # \d in Go's regexp (RE2) matches only ASCII digits [0-9].

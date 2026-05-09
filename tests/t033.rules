@@ -5,7 +5,7 @@ IGNORE=''''
 # Each segment after a \r must be treated as a new line start:
 #   - line_color on frame1 must not bleed into frame2 or frame3
 #   - frame2 and frame3 are independently colorable
-printf 'frame1\rframe2\rframe3' | "$(dirname "$0")"/../bin/hl $debug $options --width 120 -r "$0"
+printf 'frame1\rframe2\rframe3' | "$(dirname "$0")"/../bin/hl $debug $options -r "$0"
 exit $?
 '''
 
