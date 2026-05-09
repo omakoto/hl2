@@ -1,0 +1,9 @@
+#!/bin/sh
+IGNORE=''''
+exec "$(dirname "$0")"/../bin/hl $debug $options -n -S --width 120 -r "$0"
+'''
+
+# -S: suppress the "---" skip markers that appear between non-adjacent shown sections
+[[rule]]
+pattern = 'SHOW'
+show = true

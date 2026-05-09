@@ -1,0 +1,28 @@
+#!/bin/sh
+# Test -q: suppresses "Waiting for input from stdin" warning when stdin is a TTY.
+# Uses script(1) to run hl inside a PTY so isatty(stdin) returns true.
+# Ctrl-D (\004) is piped to script so hl receives EOF on its PTY stdin immediately.
+
+here="$(dirname "$0")"
+bin="$here/../bin/hl"
+warn=$(mktemp)
+warn_q=$(mktemp)
+trap "rm -f '$warn' '$warn_q'" EXIT
+
+printf '\004' | script -q -c "$bin 'foo' 2>$warn" /dev/null >/dev/null
+printf '\004' | script -q -c "$bin -q 'foo' 2>$warn_q" /dev/null >/dev/null
+
+has_warn=0
+grep -q "Waiting" "$warn" 2>/dev/null && has_warn=1
+has_no_warn=0
+grep -q "Waiting" "$warn_q" 2>/dev/null && has_no_warn=1
+
+if [ "$has_warn" -eq 1 ] && [ "$has_no_warn" -eq 0 ]; then
+    echo "ok"
+else
+    echo "FAIL: without-q=$has_warn with-q=$has_no_warn"
+    echo "--- without -q stderr ---"
+    cat "$warn"
+    echo "--- with -q stderr ---"
+    cat "$warn_q"
+fi

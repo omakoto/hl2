@@ -1,0 +1,12 @@
+#!/bin/sh
+IGNORE=''''
+exec "$(dirname "$0")"/../bin/hl $debug $options --width 10 -r "$0"
+'''
+
+# --width 10: pre_line and post_line should fill exactly 10 characters
+[[rule]]
+pattern = 'marker'
+pre_line = '='
+pre_line_color = 'red'
+post_line = '-'
+post_line_color = 'blue'
