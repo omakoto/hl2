@@ -5,7 +5,7 @@ Highlighter: versatile coloring filter
 ## Installation
 
 ```bash
-go get -u github.com/omakoto/hl2/src/cmd/hl
+go install github.com/omakoto/hl2/src/cmd/hl@latest
 ```
 
 (`sudo apt-get install libpcre3-dev` is no longer needed)
