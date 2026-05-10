@@ -88,7 +88,7 @@ Basic usage:
 Options:
 `)
 	getopt.CommandLine.PrintOptions(os.Stderr)
-	os.Stderr.WriteString("\n")
+	os.Stderr.WriteString("\nFor more information, see https://github.com/omakoto/hl2\n\n")
 }
 
 func preprocessOptions() {
