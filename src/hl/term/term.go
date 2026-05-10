@@ -124,7 +124,7 @@ func (t *ConsoleTerm) addColor(b *bytes.Buffer, c colors.Color, base int) {
 		if c.IsIndex() {
 			index = c.Index()
 		} else if c.IsRgb() {
-			index = Color256ToIndex(c.R(), c.B(), c.G())
+			index = Color256ToIndex(c.R(), c.G(), c.B())
 		}
 		b.WriteString(strconv.Itoa(base + int(index)))
 	}

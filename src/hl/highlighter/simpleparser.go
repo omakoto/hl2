@@ -23,13 +23,13 @@ func simpleToRule(h *Highlighter, pattern, colorsStr string) (*Rule, error) {
 	}
 
 	if len(vals) > 1 {
-		rule.SetMatchColorsString(vals[1])
+		err = rule.SetMatchColorsString(vals[1])
 		if err != nil {
 			return nil, err
 		}
 	}
 	if len(vals) > 2 {
-		rule.SetLineColorsString(vals[2])
+		err = rule.SetLineColorsString(vals[2])
 		if err != nil {
 			return nil, err
 		}

@@ -153,6 +153,7 @@ func main() {
 			if err != nil {
 				Fatalf("Cannot open file %s: %s", f, err)
 			}
+			defer in.Close()
 			doOnReader(h, in)
 		}
 	} else {
