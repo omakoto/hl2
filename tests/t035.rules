@@ -1,0 +1,19 @@
+#!/bin/sh
+IGNORE=''''
+export TERM=vt100
+exec "$(dirname "$0")"/../bin/hl $debug $options --width 80 -r "$0"
+'''
+
+# Test ConsoleTerm RGB->index color mapping (bug: B and G were swapped).
+
+[[rule]]
+pattern = '''green'''
+color = '00ff00'
+
+[[rule]]
+pattern = '''blue'''
+color = '0000ff'
+
+[[rule]]
+pattern = '''red'''
+color = 'ff0000'
