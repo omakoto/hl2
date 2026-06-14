@@ -1,0 +1,4 @@
+#!/bin/sh
+# Test patterns starting with '@' using '\@'
+
+exec "$(dirname "$0")"/../bin/hl $debug $options '\@foo' '\@bar'

@@ -93,8 +93,20 @@ Basic usage:
     # Highlight "ERROR" in bold red, "WARNING" in bold yellow:
       hl 'ERROR' @bred 'WARNING' @byellow
 
+    # Highlight "ERROR" with both red foreground and yellow background:
+      hl 'ERROR' @red/yellow
+
     # Highlight "ERROR" in bold red and color its entire line background dark red:
       hl 'ERROR' @bred@/200
+
+    # Highlight "ERROR" in bold red on yellow background, and also color the rest of the line's background blue:
+      hl 'ERROR' @bred/yellow@/blue
+
+    # Use capture group to color ONLY the captured part ("ERROR" or "WARN"), not "level=":
+      hl 'level=(ERROR|WARN)' @bred
+
+    # Use non-capturing group (?: ... ) to color the ENTIRE matched text "level=ERROR" or "level=WARN":
+      hl 'level=(?:ERROR|WARN)' @bred
 
     # Show only lines containing "ERROR" (hide others):
       hl -n 'ERROR' @bred
@@ -104,6 +116,9 @@ Basic usage:
 
     # Show only lines between "BEGIN" and "END" (implies -n):
       hl 'BEGIN' , 'END'
+
+    # Start a pattern with '@' by escaping it as '\@' (to avoid it being treated as a color spec):
+      hl '\@foo' '\@bar'
 
     # Highlight logs in one or more files:
       hl -f app.log auth.log , 'ERROR' @bred
