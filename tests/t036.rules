@@ -1,0 +1,50 @@
+#!/bin/sh
+# Test -a/--auto-color flag.
+# Output is redirected to a file, so it's not a TTY.
+# This test will check both:
+# 1. auto-color with redirected output (should NOT contain color codes).
+# 2. normal hl with redirected output (should contain color codes).
+# 3. auto-color inside a PTY via script (should contain color codes).
+
+here="$(dirname "$0")"
+bin="$here/../bin/hl"
+
+# Temp files
+out_normal=$(mktemp)
+out_auto_redirection=$(mktemp)
+out_auto_pty=$(mktemp)
+
+trap "rm -f '$out_normal' '$out_auto_redirection' '$out_auto_pty'" EXIT
+
+# Case 1: normal hl with redirection -> should have color
+$bin 'hello' @bred <&0 >"$out_normal"
+
+# Case 2: hl -a with redirection -> should NOT have color (plain text)
+$bin -a 'hello' @bred <&0 >"$out_auto_redirection"
+
+# Case 3: hl -a inside a PTY -> should have color
+# We use script to make stdout a TTY.
+echo "hello world" | script -q -c "stty -echo && $bin -q -a 'hello' @bred" /dev/null > "$out_auto_pty"
+
+# Check findings
+esc=$(printf '\033')
+has_color_normal=0
+grep -q "$esc" "$out_normal" && has_color_normal=1
+
+has_color_auto_redirection=0
+grep -q "$esc" "$out_auto_redirection" && has_color_auto_redirection=1
+
+has_color_auto_pty=0
+grep -q "$esc" "$out_auto_pty" && has_color_auto_pty=1
+
+if [ "$has_color_normal" -eq 1 ] && [ "$has_color_auto_redirection" -eq 0 ] && [ "$has_color_auto_pty" -eq 1 ]; then
+    echo "ok"
+else
+    echo "FAIL: normal=$has_color_normal auto_redir=$has_color_auto_redirection auto_pty=$has_color_auto_pty"
+    echo "--- normal output ---"
+    cat -v "$out_normal"
+    echo "--- auto redir output ---"
+    cat -v "$out_auto_redirection"
+    echo "--- auto pty output ---"
+    cat -v "$out_auto_pty"
+fi

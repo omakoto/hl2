@@ -34,6 +34,7 @@ var (
 	cpuprofile        = getopt.StringLong("cpuprofile", 'P', "", "Write cpu profile to file.")
 	help              = getopt.BoolLong("help", 'h', "Show this help.")
 	noTtyWarning      = getopt.BoolLong("no-tty-warning", 'q', "Don't show warning even when stdin is tty.")
+	autoColor         = getopt.BoolLong("auto-color", 'a', "Disable coloring if stdout is not a terminal.")
 	readFiles         = getopt.BoolLong("files", 'f', "Read from files instead of stdin. Use ',' (or -s) to separate from filter specs.")
 	argumentSeparator = getopt.StringLong("range-separator", 's', ArgumentSeparator, "Specify argument separator. (default="+ArgumentSeparator+")")
 )
@@ -141,7 +142,12 @@ func main() {
 	preprocessOptions()
 
 	// Initialize highlighter.
-	h := highlighter.NewHighlighter()
+	var h *highlighter.Highlighter
+	if *autoColor && !isatty.IsTerminal(os.Stdout.Fd()) {
+		h = highlighter.NewHighlighterWithTerm(term.NewDumbTerm())
+	} else {
+		h = highlighter.NewHighlighter()
+	}
 	h.SetIgnoreCase(*ignoreCase)
 	h.SetDefaultHide(*defaultHide)
 	h.SetDefaultBefore(*before)
