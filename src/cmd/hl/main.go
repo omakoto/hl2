@@ -28,13 +28,13 @@ var (
 	ignoreCase        = getopt.BoolLong("ignore-case", 'i', "Perform case insensitive match.")
 	defaultHide       = getopt.BoolLong("hide", 'n', "Hide all lines by default.")
 	noSkipMarker      = getopt.BoolLong("no-skip-marker", 'S', "Suppress skip markers.")
-	execute           = getopt.BoolLong("command", 'c', "TODO Doc") // "Treat arguments as command line instead of input filese, execute it and apply to output.\nOptionally specify command line terminator.")
+	execute           = getopt.BoolLong("command", 'c', "Execute command and process its output. Use ',' (or -s) to separate from filter specs.")
 	eatStderr         = getopt.BoolLong("stderr", '2', "Use with -c; process stderr from command too.")
 	width             = getopt.IntLong("width", 'w', term.GetTermWidth(), "Set terminal width, used for pre and post lines.")
 	cpuprofile        = getopt.StringLong("cpuprofile", 'P', "", "Write cpu profile to file.")
 	help              = getopt.BoolLong("help", 'h', "Show this help.")
 	noTtyWarning      = getopt.BoolLong("no-tty-warning", 'q', "Don't show warning even when stdin is tty.")
-	readFiles         = getopt.BoolLong("files", 'f', "TODO Doc")
+	readFiles         = getopt.BoolLong("files", 'f', "Read from files instead of stdin. Use ',' (or -s) to separate from filter specs.")
 	argumentSeparator = getopt.StringLong("range-separator", 's', ArgumentSeparator, "Specify argument separator. (default="+ArgumentSeparator+")")
 )
 
@@ -84,6 +84,31 @@ Basic usage:
     black | red | green | yellow | blue | magenta | cyan | white
     [0-5][0-5][0-5]     (RGB: 216 colors)
     [0-9a-f]{6}         (RRGGBB: 24bit colors)
+
+  Examples:
+    # Highlight "ERROR" and "WARNING" in stdout/stdin with auto-selected colors:
+      hl ERROR WARNING
+
+    # Highlight "ERROR" in bold red, "WARNING" in bold yellow:
+      hl 'ERROR' @bred 'WARNING' @byellow
+
+    # Highlight "ERROR" in bold red and color its entire line background dark red:
+      hl 'ERROR' @bred@/200
+
+    # Show only lines containing "ERROR" (hide others):
+      hl -n 'ERROR' @bred
+
+    # Show only lines containing "ERROR" with 2 lines of context:
+      hl -n -C 2 'ERROR' @bred
+
+    # Show only lines between "BEGIN" and "END" (implies -n):
+      hl 'BEGIN' , 'END'
+
+    # Highlight logs in one or more files:
+      hl -f app.log auth.log , 'ERROR' @bred
+
+    # Run "make" and highlight its stdout (and stderr with -2):
+      hl -c -2 make , 'error' @bred 'warning' @byellow
 
 Options:
 `)
